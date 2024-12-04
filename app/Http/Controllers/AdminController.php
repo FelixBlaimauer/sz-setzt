@@ -15,6 +15,8 @@ class AdminController extends Controller
             abort(403);
         }
 
-        return Inertia::render('Admin/Index');
+        return Inertia::render('Admin/Index', [
+            'teams' => Team::all(),
+        ]);
     }
 }

@@ -5,11 +5,27 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
+type Role = 'admin' | 'guest';
+
+interface User {
+    id: string;
+    name: string;
+    email: string;
+    roles: Role[];
+}
+
+interface NavRoute {
+    title: string;
+    name: string;
+}
+
 export default function Authenticated({
     header,
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
-    const user = usePage().props.auth.user;
+    const user = usePage().props.auth.user satisfies User;
+
+    const navRoutes: NavRoute[] = [{ title: 'Dashboard', name: 'dashboard' }];
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -27,12 +43,23 @@ export default function Authenticated({
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
-                                >
-                                    Dashboard
-                                </NavLink>
+                                {navRoutes.map((navRoute) => (
+                                    <NavLink
+                                        key={navRoute.name}
+                                        href={route(navRoute.name)}
+                                        active={route().current(navRoute.name)}
+                                    >
+                                        {navRoute.title}
+                                    </NavLink>
+                                ))}
+                                {user.roles.includes('admin') && (
+                                    <NavLink
+                                        href={route('admin.index')}
+                                        active={route().current('admin.index')}
+                                    >
+                                        Admin
+                                    </NavLink>
+                                )}
                             </div>
                         </div>
 

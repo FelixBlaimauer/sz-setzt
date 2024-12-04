@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class TeamController extends Controller
 {
     public function store(Request $request): RedirectResponse
     {
-        if ($request->user()->can('create', Team::class)) {
+        if ($request->user()->cannot('create', Team::class)) {
             abort(403);
         }
 
-        return redirect('/teams');
+        Team::create($request->all());
+
+        return Redirect::route('admin.index');
     }
 }

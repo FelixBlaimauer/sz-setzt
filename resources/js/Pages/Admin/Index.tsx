@@ -1,7 +1,10 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Team } from '@/Pages/Admin/Partials/Teams/Columns';
+import TeamAdminList from '@/Pages/Admin/TeamAdminList';
+import { PageProps } from '@/types';
 import { Head } from '@inertiajs/react';
 
-export default function Index() {
+export default function Index({ teams }: PageProps<{ teams: Team[] }>) {
     return (
         <AuthenticatedLayout
             header={
@@ -10,7 +13,15 @@ export default function Index() {
                 </h2>
             }
         >
-            <Head title="Admin"></Head>
+            <Head title="Admin" />
+
+            <div className="py-12">
+                <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                        <TeamAdminList teams={teams} />
+                    </div>
+                </div>
+            </div>
         </AuthenticatedLayout>
     );
 }
