@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Team } from '@/Pages/Admin/Partials/Teams/Columns';
+import { Team } from '@/Pages/Admin/Partials/Teams/TeamColumns';
 import TeamAdminList from '@/Pages/Admin/TeamAdminList';
 import { PageProps } from '@/types';
 import { Head } from '@inertiajs/react';

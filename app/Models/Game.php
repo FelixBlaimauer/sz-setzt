@@ -2,20 +2,20 @@
 
 namespace App\Models;
 
-use Database\Factories\TeamFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Team extends Model
+class Game extends Model
 {
-    use HasUlids;
-    /** @use HasFactory<TeamFactory> */
+    Use HasUlids;
+    /** @use HasFactory<\Database\Factories\GameFactory> */
     use HasFactory;
 
     protected $fillable = [
         'name',
+        'played_at'
     ];
 
     public function goals(): HasMany
@@ -23,8 +23,8 @@ class Team extends Model
         return $this->hasMany(Goal::class);
     }
 
-    public function games(): HasMany
+    public function teams(): HasMany
     {
-        return $this->hasMany(Game::class);
+        return $this->hasMany(Team::class);
     }
 }

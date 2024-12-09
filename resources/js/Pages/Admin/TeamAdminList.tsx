@@ -4,7 +4,7 @@ import Modal from '@/Components/Modal';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
-import { columns, Team } from '@/Pages/Admin/Partials/Teams/Columns';
+import { teamColumns, Team } from '@/Pages/Admin/Partials/Teams/TeamColumns';
 import { useForm } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 import { DataTable } from '@/Components/DataTable';
@@ -19,7 +19,7 @@ interface TeamAdminListProps {
 
 export default function TeamAdminList({ teams }: TeamAdminListProps) {
     const [handlingTeamCreation, setHandlingTeamCreation] = useState(false);
-    const teamNameInput = useRef<HTMLInputElement>(null);
+    const teamNameInput = useRef<HTMLInputElement | null>(null);
 
     const {
         data,
@@ -120,7 +120,7 @@ export default function TeamAdminList({ teams }: TeamAdminListProps) {
             </header>
 
             <div className="py-10">
-                <DataTable<Team> columns={columns} data={teams} />
+                <DataTable<Team> columns={teamColumns} data={teams} />
             </div>
         </section>
     );

@@ -11,7 +11,7 @@ class AdminController extends Controller
 {
     public function index(Request $request): Response
     {
-        if (!$request->user()->can('create', Team::class)) {
+        if ($request->user()->cannot('create', Team::class)) {
             abort(403);
         }
 

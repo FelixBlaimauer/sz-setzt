@@ -19,4 +19,15 @@ class TeamController extends Controller
 
         return Redirect::route('admin.index');
     }
+
+    public function destroy(Request $request, Team $team): RedirectResponse
+    {
+        if ($request->user()->cannot('delete', $team)) {
+            abort(403);
+        }
+
+        $team->delete();
+
+        return Redirect::route('admin.index');
+    }
 }
