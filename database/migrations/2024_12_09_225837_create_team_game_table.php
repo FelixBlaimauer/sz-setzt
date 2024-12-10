@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('goals', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->foreignUlid('game_id')->constrained()->nullOnDelete();
-            $table->foreignUlid('team_id')->constrained()->nullOnDelete();
+        Schema::create('team_game', function (Blueprint $table) {
+            $table->id();
+            $table->foreignUlid('team_id')->constrained()->cascadeOnDelete();
+            $table->foreignUlid('game_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('goals');
+        Schema::dropIfExists('team_game');
     }
 };

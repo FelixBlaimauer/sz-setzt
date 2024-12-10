@@ -97,6 +97,11 @@ export default function Authenticated({
                                             Profile
                                         </Dropdown.Link>
                                         <Dropdown.Link
+                                            href={route('profile.deposit')}
+                                        >
+                                            Deposit
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
                                             href={route('logout')}
                                             method="post"
                                             as="button"
@@ -179,6 +184,9 @@ export default function Authenticated({
                         <div className="mt-3 space-y-1">
                             <ResponsiveNavLink href={route('profile.edit')}>
                                 Profile
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('profile.deposit')}>
+                                Deposit
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"

@@ -19,4 +19,20 @@ class AdminController extends Controller
             'teams' => Team::all(),
         ]);
     }
+
+    public function deposit(Request $request): Response
+    {
+        $userId = $request->query('userId');
+        if ($request->user()->cannot('create', Team::class)) {
+            abort(403);
+        }
+
+        if (!$userId) {
+            abort(404);
+        }
+
+        return Inertia::render('Admin/Deposit', [
+            'userId' => $userId,
+        ]);
+    }
 }
