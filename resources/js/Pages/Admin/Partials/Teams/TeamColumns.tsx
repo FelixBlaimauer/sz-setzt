@@ -9,11 +9,8 @@ import {
 import { MoreHorizontal, Trash2 } from 'lucide-react';
 import { Button } from '@headlessui/react';
 import { router } from '@inertiajs/react';
+import { Team } from '@/lib/types/Team';
 
-export interface Team {
-    id: string;
-    name: string;
-}
 
 export const teamColumns: ColumnDef<Team>[] = [
     {
@@ -50,6 +47,6 @@ export const teamColumns: ColumnDef<Team>[] = [
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
-        }
-    }
+        },
+    },
 ];

@@ -17,11 +17,16 @@ class UserSeeder extends Seeder
         // User::factory(10)->create();
         $adminRole = Role::where('name', 'admin')->first();
 
-        $user = User::factory()->create([
+        $admin = User::factory()->create([
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => 'admin@example.com',
         ]);
 
-        $user->roles()->attach($adminRole);
+        $guest = User::factory()->create([
+            'name' => 'Guest User',
+            'email' => 'guest@example.com'
+        ]);
+
+        $admin->roles()->attach($adminRole);
     }
 }

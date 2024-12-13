@@ -5,6 +5,9 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 
+import durationPlugin from 'dayjs/plugin/duration';
+import dayjs from 'dayjs';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -19,6 +22,8 @@ createInertiaApp({
             hydrateRoot(el, <App {...props} />);
             return;
         }
+
+        dayjs.extend(durationPlugin);
 
         createRoot(el).render(<App {...props} />);
     },

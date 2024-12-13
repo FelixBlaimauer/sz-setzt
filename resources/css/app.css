@@ -64,3 +64,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.game-card-left {
+    background: linear-gradient(-70deg, white 50%, rgba(0, 142, 236, 0.06) 50%);
+}
+
+.game-card-right {
+    background: linear-gradient(-70deg, rgba(0, 142, 236, 0.06) 50%, white 50%);
+}

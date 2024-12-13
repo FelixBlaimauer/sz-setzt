@@ -18,6 +18,8 @@ class GoalFactory extends Factory
     {
         return [
             'game_id' => fn () => \App\Models\Game::factory()->create()->id,
+            'team_id' => fn () => \App\Models\Team::factory()->create()->id,
+            'player_id' => fn () => \App\Models\Player::factory()->create()->id,
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,7 +17,8 @@ class AdminController extends Controller
         }
 
         return Inertia::render('Admin/Index', [
-            'teams' => Team::all(),
+            'teams' => fn () => Team::all(),
+            'games' => fn () => Game::all(),
         ]);
     }
 

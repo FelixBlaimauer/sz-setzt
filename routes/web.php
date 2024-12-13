@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
+use App\Models\Game;
 use App\Models\Team;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +18,12 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/home', function () {
+    return Inertia::render('Home');
+});
+
+Route::get('/games', [GameController::class, 'userGames'])->name('games.index');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -33,6 +41,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/teams', [TeamController::class, 'store'])->can('create', Team::class)->name('teams.store');
     Route::delete('/teams/{team}', [TeamController::class, 'destroy'])->can('delete', Team::class)->name('teams.destroy');
+
+    Route::post('/games', [GameController::class, 'store'])->can('create', Game::class)->name('games.store');
+    Route::delete('/games/{game}', [GameController::class, 'destroy'])->can('delete', Game::class)->name('games.destroy');
 });
 
 require __DIR__.'/auth.php';

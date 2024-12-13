@@ -4,14 +4,13 @@ import Modal from '@/Components/Modal';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
-import { teamColumns, Team } from '@/Pages/Admin/Partials/Teams/TeamColumns';
+import { teamColumns } from '@/Pages/Admin/Partials/Teams/TeamColumns';
 import { useForm } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 import { DataTable } from '@/Components/DataTable';
+import { Team } from '@/lib/types/Team';
 
-interface TeamData {
-    name: string;
-}
+type TeamFormData = Omit<Team, 'id'>;
 
 interface TeamAdminListProps {
     teams: Team[];
@@ -29,7 +28,7 @@ export default function TeamAdminList({ teams }: TeamAdminListProps) {
         reset,
         errors,
         clearErrors,
-    } = useForm<TeamData>({
+    } = useForm<TeamFormData>({
         name: '',
     });
 

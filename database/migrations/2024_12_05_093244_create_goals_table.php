@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('game_id')->constrained()->nullOnDelete();
             $table->foreignUlid('team_id')->constrained()->nullOnDelete();
+            $table->foreignUlid('player_id')->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

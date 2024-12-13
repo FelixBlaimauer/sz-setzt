@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name');
+            $table->integer('duration'); // in minutes (e.g. 90 for 1.5 hours
             $table->dateTime('played_at');
             $table->timestamps();
         });
