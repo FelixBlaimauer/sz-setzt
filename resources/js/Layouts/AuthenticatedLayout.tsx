@@ -4,6 +4,7 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
+import { Shield } from 'lucide-react';
 
 type Role = 'admin' | 'guest';
 
@@ -23,9 +24,12 @@ export default function Authenticated({
     header,
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
-    const user = usePage().props.auth.user satisfies User;
+    const user = usePage().props.auth.user satisfies User | null;
 
-    const navRoutes: NavRoute[] = [{ title: 'Dashboard', name: 'dashboard' }];
+    const navRoutes: NavRoute[] = [
+        { title: 'Dashboard', name: 'dashboard' },
+        { title: 'Games', name: 'games.index' },
+    ];
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -52,11 +56,13 @@ export default function Authenticated({
                                         {navRoute.title}
                                     </NavLink>
                                 ))}
-                                {user.roles.includes('admin') && (
+                                {user?.roles.includes('admin') && (
                                     <NavLink
                                         href={route('admin.index')}
                                         active={route().current('admin.index')}
+                                        className="flex items-center gap-1"
                                     >
+                                        <Shield className="h-4 w-4" />
                                         Admin
                                     </NavLink>
                                 )}
@@ -72,7 +78,7 @@ export default function Authenticated({
                                                 type="button"
                                                 className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                                             >
-                                                {user.name}
+                                                {user?.name}
 
                                                 <svg
                                                     className="-me-0.5 ms-2 h-4 w-4"
@@ -163,47 +169,64 @@ export default function Authenticated({
                     }
                 >
                     <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                        {user.roles.includes('admin') && (
+                        {navRoutes.map((navRoute) => (
+                            <ResponsiveNavLink
+                                key={navRoute.name}
+                                href={route(navRoute.name)}
+                                active={route().current(navRoute.name)}
+                            >
+                                {navRoute.title}
+                            </ResponsiveNavLink>
+                        ))}
+                        {user?.roles.includes('admin') && (
                             <ResponsiveNavLink
                                 href={route('admin.index')}
                                 active={route().current('admin.index')}
+                                className="flex items-center gap-2"
                             >
+                                <Shield className="h-4 w-4" />
                                 Admin
                             </ResponsiveNavLink>
                         )}
                     </div>
 
-                    <div className="border-t border-gray-200 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
-                                {user.name}
-                            </div>
-                            <div className="text-sm font-medium text-gray-500">
-                                {user.email}
-                            </div>
-                        </div>
+                    <div className="border-t border-gray-200 py-2">
+                        {user ? (
+                            <>
+                                <div className="px-4">
+                                    <div className="text-base font-medium text-gray-800">
+                                        {user?.name}
+                                    </div>
+                                    <div className="text-sm font-medium text-gray-500">
+                                        {user?.email}
+                                    </div>
+                                </div>
 
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
+                                <div className="mt-3 space-y-1">
+                                    <ResponsiveNavLink
+                                        href={route('profile.edit')}
+                                    >
+                                        Profile
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        href={route('profile.deposit')}
+                                    >
+                                        Deposit
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        method="post"
+                                        href={route('logout')}
+                                        as="button"
+                                    >
+                                        Log Out
+                                    </ResponsiveNavLink>
+                                </div>
+                            </>
+                        ) : (
+                            <ResponsiveNavLink href={route('login')}>
+                                Log In
                             </ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('profile.deposit')}>
-                                Deposit
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route('logout')}
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -216,7 +239,7 @@ export default function Authenticated({
                 </header>
             )}
 
-            <main>{children}</main>
+            <main className="mx-auto max-w-7xl">{children}</main>
         </div>
     );
 }

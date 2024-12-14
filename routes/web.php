@@ -19,10 +19,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/home', function () {
-    return Inertia::render('Home');
-});
-
 Route::get('/games', [GameController::class, 'userGames'])->name('games.index');
 
 Route::get('/dashboard', function () {

@@ -18,7 +18,7 @@ class GameFactory extends Factory
     {
         return [
             'name' => $this->faker->company(),
-            'played_at' => $this->faker->dateTime(),
+            'played_at' => $this->faker->dateTimeBetween('now', '+2 days'),
             'duration' => 15,
         ];
     }
