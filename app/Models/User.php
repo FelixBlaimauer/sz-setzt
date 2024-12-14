@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use http\Env\Request;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -57,8 +58,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public function isAdmin(): bool
+    public function isAdmin(): Attribute
     {
-        return $this->roles->contains('name', 'admin');
+        return Attribute::make(
+            get: function () {
+                return $this->roles->contains('name', 'admin');
+            }
+        );
     }
 }

@@ -10,6 +10,8 @@ export default function Index({
     teams,
     games,
 }: PageProps<{ teams: Team[]; games: AdminGame[] }>) {
+    console.log(teams);
+    console.log(games);
     return (
         <AuthenticatedLayout
             header={

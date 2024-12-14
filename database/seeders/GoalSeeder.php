@@ -15,9 +15,9 @@ class GoalSeeder extends Seeder
     {
         $games = Game::all();
 
-        $games->each(function ($game) {
-            $goalsA = random_int(0, 5);
-            $goalsB = random_int(0, 5);
+        $games->each(function (Game $game) {
+            $goalsA = rand(0, 5);
+            $goalsB = rand(0, 5);
 
             for ($i = 0; $i < $goalsA; $i++) {
                 $game->goals()->create([

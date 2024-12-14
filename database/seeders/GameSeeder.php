@@ -15,7 +15,7 @@ class GameSeeder extends Seeder
     public function run(): void
     {
         $teams = Team::all();
-        $games = Game::factory(4)->create();
+        $games = Game::factory(8)->create();
         $liveGame = Game::factory()->create([
             'played_at' => now(),
         ]);

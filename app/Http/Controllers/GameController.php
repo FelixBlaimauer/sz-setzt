@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\Goal;
+use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -37,20 +39,16 @@ class GameController extends Controller
         $displayGames = $games->map(function (Game $game) {
             return [
                 'id' => $game->id,
-                'score' => rand(0, 4) . ':' . rand(0, 4),
                 'played_at' => $game->played_at->toISOString(),
                 'duration' => $game->duration,
-                'teams' => $game->teams->map(fn($team) => [
+                'teams' => $game->teams->map(fn(Team $team) => [
                     'id' => $team->id,
                     'name' => $team->name,
                     'odds' => rand(11, 20) / 10,
-                    'goals' => array_map(fn() => [
-                        'player' => 'Player ' . rand(1, 11),
-                    ], range(0, rand(0, 4))),
-                    'stats' => [
-                        'wins' => 1,
-                        'losses' => 1
-                    ]
+                    'goals' => $team->goals
+                        ->where('game_id', $game->id)
+                        ->map(fn (Goal $goal) => ['player' => $goal->player->name]) ?? [],
+                    'stats' => $team->stats
                 ])
             ];
         });

@@ -1,17 +1,21 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-export type OddFormat = 'decimal' | 'fractional' | 'moneyline';
+export const ODD_FORMATS = ['decimal', 'fractional', 'moneyline'] as const;
+export type OddFormat = (typeof ODD_FORMATS)[number];
 
 function gcd(a: number, b: number): number {
     return b === 0 ? a : gcd(b, a % b);
 }
 
-function reduceFraction(numerator: number, denominator: number): [number, number] {
+function reduceFraction(
+    numerator: number,
+    denominator: number,
+): [number, number] {
     const divisor = gcd(numerator, denominator);
     return [numerator / divisor, denominator / divisor];
-
 }
+
 export function formatOdds(odds: number, format: OddFormat = 'decimal') {
     if (format === 'decimal') {
         return odds.toFixed(2);

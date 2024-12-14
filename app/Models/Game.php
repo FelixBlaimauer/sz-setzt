@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,5 +33,34 @@ class Game extends Model
     public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class);
+    }
+
+    public function ends_at() {
+        return $this->played_at->addMinutes($this->duration);
+    }
+
+    protected function winner(): Attribute {
+        return Attribute::make(
+            get: function () {
+                if ($this->teams->count() !== 2) {
+                    return null;
+                }
+                if (now()->isBefore($this->ends_at())) {
+                    return null;
+                }
+
+                $team1 = $this->teams->first();
+                $team2 = $this->teams->last();
+
+                $team1Goals = $this->goals->where('team_id', $team1->id)->count();
+                $team2Goals = $this->goals->where('team_id', $team2->id)->count();
+
+                if ($team1Goals === $team2Goals) {
+                    return 'TIE';
+                }
+
+                return $team1Goals > $team2Goals ? $team1 : $team2;
+            }
+        )->shouldCache();
     }
 }

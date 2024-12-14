@@ -169,6 +169,14 @@ export default function Authenticated({
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        {user.roles.includes('admin') && (
+                            <ResponsiveNavLink
+                                href={route('admin.index')}
+                                active={route().current('admin.index')}
+                            >
+                                Admin
+                            </ResponsiveNavLink>
+                        )}
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4">

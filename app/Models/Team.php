@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\TeamFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,5 +28,43 @@ class Team extends Model
     public function games(): BelongsToMany
     {
         return $this->belongsToMany(Game::class);
+    }
+
+    public function players(): HasMany
+    {
+        return $this->hasMany(Player::class);
+    }
+
+    public function stats(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $wins = 0;
+                $ties = 0;
+                $losses = 0;
+
+                $this->games->each(function (Game $game) use (&$wins, &$ties, &$losses) {
+                    $winner = $game->winner;
+
+                    if ($winner === null) {
+                        return;
+                    }
+
+                    if ($winner === 'TIE') {
+                        $ties++;
+                    } else if ($winner->id === $this->id) {
+                        $wins++;
+                    } else {
+                        $losses++;
+                    }
+                });
+
+                return [
+                    'wins' => $wins,
+                    'ties' => $ties,
+                    'losses' => $losses,
+                ];
+            }
+        )->shouldCache();
     }
 }

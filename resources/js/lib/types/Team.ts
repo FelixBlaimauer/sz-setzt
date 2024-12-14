@@ -4,9 +4,10 @@ export interface Team {
     id: string;
     name: string;
     odds?: number;
-    goals: Goal[];
+    goals?: Goal[];
     stats: {
         wins: number;
+        ties: number;
         losses: number;
     };
 }

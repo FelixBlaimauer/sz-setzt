@@ -17,8 +17,8 @@ class AdminController extends Controller
         }
 
         return Inertia::render('Admin/Index', [
-            'teams' => fn () => Team::all(),
-            'games' => fn () => Game::all(),
+            'teams' => fn () => Team::with('players')->get(),
+            'games' => fn () => Game::with('goals')->get(),
         ]);
     }
 
