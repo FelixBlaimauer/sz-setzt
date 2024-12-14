@@ -50,7 +50,8 @@ class Team extends Model
                         return;
                     }
 
-                    if ($winner === 'TIE') {
+                    // TODO: fix stat calculation
+                    if ($winner == 'TIE') {
                         $ties++;
                     } else if ($winner->id === $this->id) {
                         $wins++;

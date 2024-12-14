@@ -35,8 +35,10 @@ class Game extends Model
         return $this->belongsToMany(Team::class);
     }
 
-    public function ends_at() {
-        return $this->played_at->addMinutes($this->duration);
+    protected function endsAt(): Attribute {
+        return Attribute::make(
+            get: fn() => $this->played_at->addMinutes($this->duration)
+        );
     }
 
     protected function winner(): Attribute {
@@ -45,7 +47,7 @@ class Game extends Model
                 if ($this->teams->count() !== 2) {
                     return null;
                 }
-                if (now()->isBefore($this->ends_at())) {
+                if (now()->isBefore($this->ends_at)) {
                     return null;
                 }
 
