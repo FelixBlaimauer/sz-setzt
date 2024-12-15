@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             GameSeeder::class,
             GoalSeeder::class,
             TransactionSeeder::class,
+            BetSeeder::class,
         ]);
     }
 }

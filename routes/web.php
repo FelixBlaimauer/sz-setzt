@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'des/destroy'])->name('profile.destroy');
     Route::get('/profile/deposit', [ProfileController::class, 'deposit'])->name('profile.deposit');
+    Route::get('/profile/transactions', [ProfileController::class, 'transactions'])->name('profile.transactions');
 
     // TODO: change permission to view
     Route::get('/admin', [AdminController::class, 'index'])->can('create', Team::class)->name('admin.index');

@@ -32,6 +32,13 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function transactions(Request $request): Response
+    {
+        return Inertia::render('Profile/Transactions', [
+            'transactions' => $request->user()->transactions,
+        ]);
+    }
+
     /**
      * Update the user's profile information.
      */

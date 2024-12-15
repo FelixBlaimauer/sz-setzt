@@ -69,6 +69,11 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class);
     }
 
+    public function bets(): HasMany
+    {
+        return $this->hasMany(Bet::class);
+    }
+
     protected function isAdmin(): Attribute
     {
         return Attribute::make(

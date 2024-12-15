@@ -4,7 +4,7 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, router, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
-import { CircleUserRound, Coins, LogOut, PiggyBank, RefreshCw, Shield } from 'lucide-react';
+import { ArrowRightLeft, CircleUserRound, Coins, LogOut, PiggyBank, RefreshCw, Shield } from 'lucide-react';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { cn } from '@/lib/utils';
 
@@ -137,6 +137,13 @@ export default function Authenticated({
                                             <PiggyBank className="h-4 w-4" />
                                             Deposit
                                         </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route('profile.transactions')}
+                                            className="flex items-center gap-2"
+                                        >
+                                            <ArrowRightLeft className="h-4 w-4" />
+                                            Transactions
+                                        </Dropdown.Link>
                                         <div className="my-1 border-t"></div>
                                         <Dropdown.Link
                                             href={route('logout')}
@@ -259,6 +266,13 @@ export default function Authenticated({
                                     >
                                         <PiggyBank className="h-4 w-4" />
                                         Deposit
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        href={route('profile.transactions')}
+                                        className="items-center gap-2"
+                                    >
+                                        <ArrowRightLeft className="h-4 w-4" />
+                                        Transactions
                                     </ResponsiveNavLink>
                                     <div className="border-t" />
                                     <ResponsiveNavLink

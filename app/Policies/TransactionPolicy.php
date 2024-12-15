@@ -30,6 +30,9 @@ class TransactionPolicy
      */
     public function view(User $user, Transaction $transaction): bool
     {
+        if ($user->id === $transaction->user_id) {
+            return true;
+        }
         return false;
     }
 
