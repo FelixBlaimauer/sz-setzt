@@ -8,19 +8,12 @@ import dayjs from 'dayjs';
 import { RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-export default function Welcome({ auth, games }: PageProps<{ games: Game[] }>) {
+export default function Home({ auth, games }: PageProps<{ games: Game[] }>) {
     const [liveGames, setLiveGames] = useState<Game[]>([]);
     const [upcomingGames, setUpcomingGames] = useState<Game[]>([]);
     const [finishedGames, setFinishedGames] = useState<Game[]>([]);
 
     const [oddFormat, setOddFormat] = useState<OddFormat>('decimal');
-
-    const [refreshRotate, setRefreshRotate] = useState<boolean>(false);
-
-    const refresh = () => {
-        setRefreshRotate(!refreshRotate);
-        router.reload();
-    };
 
     useEffect(() => {
         console.log(games);
@@ -49,7 +42,7 @@ export default function Welcome({ auth, games }: PageProps<{ games: Game[] }>) {
             dayjs(a.played_at).diff(dayjs(b.played_at)),
         );
         finishedGames.sort((a, b) =>
-            dayjs(a.played_at).diff(dayjs(b.played_at)),
+            dayjs(b.played_at).diff(dayjs(a.played_at)),
         );
 
         setLiveGames(liveGames);
@@ -59,19 +52,7 @@ export default function Welcome({ auth, games }: PageProps<{ games: Game[] }>) {
 
     return (
         <AuthenticatedLayout>
-            <Head title="Home | Weihnachtsturnier" />
-
-            <PrimaryButton
-                className="fixed bottom-4 right-4 z-10 aspect-square transition-transform"
-                onClick={refresh}
-            >
-                <RefreshCw
-                    className={cn(
-                        'h-4 w-4 transition-transform',
-                        refreshRotate && 'rotate-180',
-                    )}
-                />
-            </PrimaryButton>
+            <Head title="Home" />
 
             <div className="mt-4">
                 <div className="mx-4 mb-6 flex items-center justify-between gap-4 rounded-lg bg-white p-2 shadow-sm sm:w-fit">
@@ -129,6 +110,7 @@ export default function Welcome({ auth, games }: PageProps<{ games: Game[] }>) {
                                 key={game.id}
                                 game={game}
                                 oddFormat={oddFormat}
+                                showScore={false}
                                 showTime
                             />
                         ))}
@@ -149,6 +131,7 @@ export default function Welcome({ auth, games }: PageProps<{ games: Game[] }>) {
                             <GameCard
                                 key={game.id}
                                 game={game}
+                                showOdds={false}
                                 oddFormat={oddFormat}
                             />
                         ))}

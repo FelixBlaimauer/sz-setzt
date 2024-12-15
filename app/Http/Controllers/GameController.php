@@ -32,25 +32,37 @@ class GameController extends Controller
         return Redirect::route('admin.index');
     }
 
+    private function serializeGame(Game $game)
+    {
+        return [
+            'id' => $game->id,
+            'played_at' => $game->played_at->toISOString(),
+            'duration' => $game->duration,
+            'teams' => $game->teams->map(fn(Team $team) => [
+                'id' => $team->id,
+                'name' => $team->name,
+                'odds' => rand(11, 20) / 10,
+                'goals' => $team->goals
+                        ->where('game_id', $game->id)
+                        ->map(fn(Goal $goal) => ['player' => $goal->player->name]) ?? [],
+                'stats' => $team->stats
+            ])
+        ];
+    }
+
+    public function show(Request $request, Game $game)
+    {
+        return Inertia::render('Games/Details', [
+            'game' => fn() => $this->serializeGame($game),
+        ]);
+    }
+
     public function userGames(Request $request)
     {
         $games = Game::all();
 
         $displayGames = $games->map(function (Game $game) {
-            return [
-                'id' => $game->id,
-                'played_at' => $game->played_at->toISOString(),
-                'duration' => $game->duration,
-                'teams' => $game->teams->map(fn(Team $team) => [
-                    'id' => $team->id,
-                    'name' => $team->name,
-                    'odds' => rand(11, 20) / 10,
-                    'goals' => $team->goals
-                        ->where('game_id', $game->id)
-                        ->map(fn (Goal $goal) => ['player' => $goal->player->name]) ?? [],
-                    'stats' => $team->stats
-                ])
-            ];
+            return $this->serializeGame($game);
         });
 
 

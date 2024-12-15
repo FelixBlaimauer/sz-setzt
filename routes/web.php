@@ -4,8 +4,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TransactionController;
 use App\Models\Game;
 use App\Models\Team;
+use App\Models\Transaction;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -20,6 +22,7 @@ Route::get('/', function () {
 });
 
 Route::get('/games', [GameController::class, 'userGames'])->name('games.index');
+Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -33,13 +36,15 @@ Route::middleware('auth')->group(function () {
 
     // TODO: change permission to view
     Route::get('/admin', [AdminController::class, 'index'])->can('create', Team::class)->name('admin.index');
-    Route::get('/admin/deposit', [AdminController::class, 'deposit'])->can('create', Team::class)->name('admin.deposit');
+    Route::get('/admin/deposit/{user}', [AdminController::class, 'deposit'])->can('create', Transaction::class)->name('admin.deposit');
 
     Route::post('/teams', [TeamController::class, 'store'])->can('create', Team::class)->name('teams.store');
     Route::delete('/teams/{team}', [TeamController::class, 'destroy'])->can('delete', Team::class)->name('teams.destroy');
 
     Route::post('/games', [GameController::class, 'store'])->can('create', Game::class)->name('games.store');
     Route::delete('/games/{game}', [GameController::class, 'destroy'])->can('delete', Game::class)->name('games.destroy');
+
+    Route::post('/transaction', [TransactionController::class, 'store'])->can('create', Transaction::class)->name('transaction.store');
 });
 
 require __DIR__.'/auth.php';

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,19 +23,14 @@ class AdminController extends Controller
         ]);
     }
 
-    public function deposit(Request $request): Response
+    public function deposit(Request $request, User $user): Response
     {
-        $userId = $request->query('userId');
         if ($request->user()->cannot('create', Team::class)) {
             abort(403);
         }
 
-        if (!$userId) {
-            abort(404);
-        }
-
         return Inertia::render('Admin/Deposit', [
-            'userId' => $userId,
+            'user' => $user,
         ]);
     }
 }

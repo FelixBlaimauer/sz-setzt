@@ -2,9 +2,11 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
-import { Shield } from 'lucide-react';
+import { CircleUserRound, Coins, LogOut, PiggyBank, RefreshCw, Shield } from 'lucide-react';
+import PrimaryButton from '@/Components/PrimaryButton';
+import { cn } from '@/lib/utils';
 
 type Role = 'admin' | 'guest';
 
@@ -34,6 +36,13 @@ export default function Authenticated({
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
+    const [refreshRotate, setRefreshRotate] = useState<boolean>(false);
+
+    const refresh = () => {
+        setRefreshRotate(!refreshRotate);
+        router.reload();
+    };
+
     return (
         <div className="min-h-screen bg-gray-100">
             <nav className="border-b border-gray-100 bg-white">
@@ -57,19 +66,36 @@ export default function Authenticated({
                                     </NavLink>
                                 ))}
                                 {user?.roles.includes('admin') && (
-                                    <NavLink
-                                        href={route('admin.index')}
-                                        active={route().current('admin.index')}
-                                        className="flex items-center gap-1"
-                                    >
-                                        <Shield className="h-4 w-4" />
-                                        Admin
-                                    </NavLink>
+                                    <>
+                                        {/*<div className="py-4 pl-4 text-gray-500">*/}
+                                        {/*    <div className="flex h-full items-center border-l-2 pl-2" />*/}
+                                        {/*</div>*/}
+                                        <NavLink
+                                            href={route('admin.index')}
+                                            active={route().current(
+                                                'admin.index',
+                                            )}
+                                            className="items-center gap-1"
+                                        >
+                                            <Shield className="h-4 w-4" />
+                                            Admin
+                                        </NavLink>
+                                    </>
                                 )}
                             </div>
                         </div>
 
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
+                            {user && (
+                                <Link
+                                    href={route('profile.deposit')}
+                                    className="mx-4 flex items-center gap-2 text-gray-500"
+                                >
+                                    <p>{user.balance}</p>
+                                    <Coins className="h-5 w-5" />
+                                </Link>
+                            )}
+
                             <div className="relative ms-3">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -99,19 +125,26 @@ export default function Authenticated({
                                     <Dropdown.Content>
                                         <Dropdown.Link
                                             href={route('profile.edit')}
+                                            className="flex items-center gap-2"
                                         >
+                                            <CircleUserRound className="h-4 w-4" />
                                             Profile
                                         </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route('profile.deposit')}
+                                            className="flex items-center gap-2"
                                         >
+                                            <PiggyBank className="h-4 w-4" />
                                             Deposit
                                         </Dropdown.Link>
+                                        <div className="my-1 border-t"></div>
                                         <Dropdown.Link
                                             href={route('logout')}
+                                            className="flex items-center gap-2"
                                             method="post"
                                             as="button"
                                         >
+                                            <LogOut className="h-4 w-4" />
                                             Log Out
                                         </Dropdown.Link>
                                     </Dropdown.Content>
@@ -120,6 +153,13 @@ export default function Authenticated({
                         </div>
 
                         <div className="-me-2 flex items-center sm:hidden">
+                            {user && (
+                                <div className="flex items-center px-4 text-gray-500">
+                                    <p>{user.balance}</p>
+                                    <Coins className="h-4 w-4" />
+                                </div>
+                            )}
+
                             <button
                                 onClick={() =>
                                     setShowingNavigationDropdown(
@@ -205,19 +245,26 @@ export default function Authenticated({
                                 <div className="mt-3 space-y-1">
                                     <ResponsiveNavLink
                                         href={route('profile.edit')}
+                                        className="items-center gap-2"
                                     >
+                                        <CircleUserRound className="h-4 w-4" />
                                         Profile
                                     </ResponsiveNavLink>
                                     <ResponsiveNavLink
                                         href={route('profile.deposit')}
+                                        className="items-center gap-2"
                                     >
+                                        <PiggyBank className="h-4 w-4" />
                                         Deposit
                                     </ResponsiveNavLink>
+                                    <div className="border-t" />
                                     <ResponsiveNavLink
                                         method="post"
                                         href={route('logout')}
                                         as="button"
+                                        className="items-center gap-2"
                                     >
+                                        <LogOut className="h-4 w-4" />
                                         Log Out
                                     </ResponsiveNavLink>
                                 </div>
@@ -238,6 +285,18 @@ export default function Authenticated({
                     </div>
                 </header>
             )}
+
+            <PrimaryButton
+                className="fixed bottom-4 right-4 z-10 aspect-square transition-transform"
+                onClick={refresh}
+            >
+                <RefreshCw
+                    className={cn(
+                        'h-4 w-4 transition-transform',
+                        refreshRotate && 'rotate-180',
+                    )}
+                />
+            </PrimaryButton>
 
             <main className="mx-auto max-w-7xl">{children}</main>
         </div>

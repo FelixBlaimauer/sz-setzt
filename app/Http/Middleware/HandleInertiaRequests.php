@@ -33,7 +33,7 @@ class HandleInertiaRequests extends Middleware
         $user = $request->user();
 
         $userResponse = $user ? [
-            ...$user->only('id', 'name', 'email'),
+            ...$user->only('id', 'name', 'email', 'balance'),
             'roles' => $user->roles->pluck('name'),
         ] : null;
 

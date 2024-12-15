@@ -4,7 +4,10 @@ import { QRCodeSVG } from 'qrcode.react';
 import { PageProps } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 
-export default function Deposit({ auth, depositUrl }: PageProps<{depositUrl: string}>) {
+export default function Deposit({
+    auth,
+    depositUrl,
+}: PageProps<{ depositUrl: string }>) {
     return (
         <AuthenticatedLayout
             header={

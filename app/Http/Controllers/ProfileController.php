@@ -26,11 +26,9 @@ class ProfileController extends Controller
 
     public function deposit(Request $request): Response
     {
-        $host = $request->getHttpHost();
-
         return Inertia::render('Profile/Deposit', [
             'status' => session('status'),
-            'depositUrl' => route('admin.deposit', ['userId' => $request->user()->id])
+            'depositUrl' => route('admin.deposit', $request->user()->id)
         ]);
     }
 
