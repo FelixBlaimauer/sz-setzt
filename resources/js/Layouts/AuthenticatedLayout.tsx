@@ -45,7 +45,7 @@ export default function Authenticated({
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
+            <nav className="border-b bg-white">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
@@ -89,7 +89,7 @@ export default function Authenticated({
                             {user && (
                                 <Link
                                     href={route('profile.deposit')}
-                                    className="mx-4 flex items-center gap-2 text-gray-500"
+                                    className="mx-4 flex items-center gap-2 text-gray-500 transition hover:text-gray-800"
                                 >
                                     <p>{user.balance}</p>
                                     <Coins className="h-5 w-5" />
@@ -154,10 +154,13 @@ export default function Authenticated({
 
                         <div className="-me-2 flex items-center sm:hidden">
                             {user && (
-                                <div className="flex items-center px-4 text-gray-500">
+                                <Link
+                                    href={route('profile.deposit')}
+                                    className="mx-4 flex items-center gap-2 text-gray-500 transition hover:text-gray-800"
+                                >
                                     <p>{user.balance}</p>
-                                    <Coins className="h-4 w-4" />
-                                </div>
+                                    <Coins className="h-5 w-5" />
+                                </Link>
                             )}
 
                             <button
