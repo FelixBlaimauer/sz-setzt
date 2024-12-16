@@ -29,13 +29,6 @@ class BetSeeder extends Seeder
 
         $gameBet->save();
 
-        $gameBet->bet()->create([
-            'user_id' => $admin->id,
-            'type' => BetType::GAME_BET,
-            'bettable_id' => $gameBet->id,
-            'amount' => 100,
-        ]);
-
         $transaction = new Transaction([
             'user_id' => $admin->id,
             'amount' => -100,
@@ -43,5 +36,14 @@ class BetSeeder extends Seeder
         ]);
 
         $transaction->save();
+
+        $gameBet->bet()->create([
+            'user_id' => $admin->id,
+            'type' => BetType::GAME_BET,
+            'bettable_id' => $gameBet->id,
+            'amount' => 100,
+            'transaction_id' => $transaction->id
+        ]);
+
     }
 }

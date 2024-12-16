@@ -44,7 +44,11 @@ class GameController extends Controller
                 'odds' => rand(11, 20) / 10,
                 'goals' => $team->goals
                         ->where('game_id', $game->id)
-                        ->map(fn(Goal $goal) => ['player' => $goal->player->name]) ?? [],
+                        ->map(fn(Goal $goal) => [
+                            'id' => $goal->id,
+                            'player' => $goal->player->name,
+                            'minute' => $goal->minute,
+                            ]) ?? [],
                 'stats' => $team->stats
             ])
         ];

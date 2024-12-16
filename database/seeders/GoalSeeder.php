@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Game;
+use App\Models\Goal;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,16 +23,18 @@ class GoalSeeder extends Seeder
             $goalsB = rand(0, 5);
 
             for ($i = 0; $i < $goalsA; $i++) {
-                $game->goals()->create([
+                Goal::factory()->create([
                     'team_id' => $game->teams->first()->id,
                     'player_id' => $game->teams->first()->players->random()->id,
+                    'game_id' => $game->id
                 ]);
             }
 
             for ($i = 0; $i < $goalsB; $i++) {
-                $game->goals()->create([
+                Goal::factory()->create([
                     'team_id' => $game->teams->last()->id,
                     'player_id' => $game->teams->last()->players->random()->id,
+                    'game_id' => $game->id
                 ]);
             }
         });

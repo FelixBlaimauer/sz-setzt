@@ -8,20 +8,15 @@ use Illuminate\Auth\Access\Response;
 
 class TransactionPolicy
 {
-    public function before(User $user, string $ability): bool|null
-    {
-        if ($user->is_admin) {
-            return true;
-        }
-
-        return null;
-    }
-
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
+        if ($user->is_admin) {
+            return true;
+        }
+
         return false;
     }
 
@@ -30,6 +25,10 @@ class TransactionPolicy
      */
     public function view(User $user, Transaction $transaction): bool
     {
+        if ($user->is_admin) {
+            return true;
+        }
+
         if ($user->id === $transaction->user_id) {
             return true;
         }
@@ -41,6 +40,10 @@ class TransactionPolicy
      */
     public function create(User $user): bool
     {
+        if ($user->is_admin) {
+            return true;
+        }
+
         return false;
     }
 
@@ -57,6 +60,10 @@ class TransactionPolicy
      */
     public function delete(User $user, Transaction $transaction): bool
     {
+        if ($user->is_admin) {
+            return true;
+        }
+
         return false;
     }
 
@@ -65,6 +72,10 @@ class TransactionPolicy
      */
     public function restore(User $user, Transaction $transaction): bool
     {
+        if ($user->is_admin) {
+            return true;
+        }
+
         return false;
     }
 
@@ -73,6 +84,10 @@ class TransactionPolicy
      */
     public function forceDelete(User $user, Transaction $transaction): bool
     {
+        if ($user->is_admin) {
+            return true;
+        }
+
         return false;
     }
 }

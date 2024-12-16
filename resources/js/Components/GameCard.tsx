@@ -1,6 +1,6 @@
 import { Team } from '@/lib/types/Team';
 import { cn, formatOdds, OddFormat } from '@/lib/utils';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 
@@ -16,6 +16,7 @@ export interface GameCardProps {
     isLive?: boolean;
     showScore: boolean;
     showOdds: boolean;
+    showDetails: boolean;
     oddFormat: OddFormat;
 }
 
@@ -25,8 +26,10 @@ export default function GameCard({
     oddFormat = 'decimal',
     showOdds = true,
     showScore = true,
+    showDetails = true,
 }: GameCardProps) {
     const [now, setNow] = useState<Dayjs>();
+    const user = usePage().props.auth.user;
 
     useEffect(() => {
         if (!isLive) return;
@@ -74,13 +77,13 @@ export default function GameCard({
                         {/*</div>*/}
                     </div>
                     <div className="flex w-fit flex-col items-center text-xl">
-                        {showOdds && game.teams[0].odds && (
+                        {user && showOdds && game.teams[0].odds && (
                             <span
                                 className={cn(
                                     '-my-2 text-3xl font-medium',
                                     game.teams[0].odds > game.teams[1].odds
                                         ? 'text-navy-400'
-                                        : 'text-greenqouise-400',
+                                        : 'text-greenquoise-400',
                                 )}
                             >
                                 {formatOdds(game.teams[0].odds, oddFormat)}
@@ -100,13 +103,13 @@ export default function GameCard({
                         </p>
                     </div>
                     <div className="flex w-fit flex-col-reverse items-center text-xl">
-                        {showOdds && game.teams[1].odds && (
+                        {user && showOdds && game.teams[1].odds && (
                             <span
                                 className={cn(
                                     '-my-2 text-3xl font-medium',
                                     game.teams[1].odds > game.teams[0].odds
                                         ? 'text-navy-400'
-                                        : 'text-greenqouise-400',
+                                        : 'text-greenquoise-400',
                                 )}
                             >
                                 {formatOdds(game.teams[1].odds, oddFormat)}
@@ -136,7 +139,7 @@ export default function GameCard({
                     </div>
                 )}
             </div>
-            {isLive ? (
+            {isLive && showDetails ? (
                 <Link
                     className="flex justify-center border border-transparent bg-gray-800 px-4 py-2 text-sm font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
                     href={route('games.show', game.id)}
@@ -144,16 +147,23 @@ export default function GameCard({
                     <span>Details</span>
                 </Link>
             ) : (
-                <div className="flex items-center justify-between border-t px-2 py-1">
+                <div
+                    className={cn(
+                        'flex items-center justify-center border-t px-2 py-1',
+                        showDetails && 'justify-between',
+                    )}
+                >
                     <p className="ml-2 text-lg text-slate-600">
                         {dayjs(game.played_at).format('DD.MM - HH:mm')} Uhr
                     </p>
-                    <Link
-                        className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-                        href={route('games.show', game.id)}
-                    >
-                        Details
-                    </Link>
+                    {showDetails && (
+                        <Link
+                            className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
+                            href={route('games.show', game.id)}
+                        >
+                            Details
+                        </Link>
+                    )}
                 </div>
             )}
         </div>

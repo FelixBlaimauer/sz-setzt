@@ -20,6 +20,7 @@ class Bet extends Model
         'user_id',
         'amount',
         'type',
+        'transaction_id'
     ];
 
     public function bettable(): MorphTo
@@ -30,5 +31,10 @@ class Bet extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function transaction(): BelongsTo
+    {
+        return $this->belongsTo(Transaction::class);
     }
 }

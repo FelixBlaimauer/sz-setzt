@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BetController;
+use App\Http\Controllers\GameBetController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
@@ -46,6 +48,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/games/{game}', [GameController::class, 'destroy'])->can('delete', Game::class)->name('games.destroy');
 
     Route::post('/transaction', [TransactionController::class, 'store'])->can('create', Transaction::class)->name('transaction.store');
+
+    Route::post('/bet/game', [GameBetController::class, 'store'])->name('bet.game.store');
 });
 
 require __DIR__.'/auth.php';

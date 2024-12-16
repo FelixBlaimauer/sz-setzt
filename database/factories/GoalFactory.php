@@ -17,9 +17,10 @@ class GoalFactory extends Factory
     public function definition(): array
     {
         return [
-            'game_id' => fn () => \App\Models\Game::factory()->create()->id,
-            'team_id' => fn () => \App\Models\Team::factory()->create()->id,
-            'player_id' => fn () => \App\Models\Player::factory()->create()->id,
+            'game_id' => fn () => \App\Models\Game::all()->random()->id,
+            'team_id' => fn () => \App\Models\Team::all()->random()->id,
+            'player_id' => fn () => \App\Models\Player::all()->random()->id,
+            'minute' => $this->faker->numberBetween(1, 15),
         ];
     }
 }

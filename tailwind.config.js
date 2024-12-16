@@ -74,7 +74,7 @@ export default {
                     DEFAULT: 'hsl(var(--destructive))',
                     foreground: 'hsl(var(--destructive-foreground))',
                 },
-                greenqouise: {
+                greenquoise: {
                     400: 'hsl(153, 81, 47)',
                 },
                 navy: {

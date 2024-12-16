@@ -13,6 +13,13 @@ class Goal extends Model
     /** @use HasFactory<\Database\Factories\GoalFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'game_id',
+        'team_id',
+        'player_id',
+        'minute',
+    ];
+
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);

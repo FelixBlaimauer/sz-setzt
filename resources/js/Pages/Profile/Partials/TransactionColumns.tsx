@@ -9,14 +9,19 @@ import { ArrowUpDown } from 'lucide-react';
 export const transactionColumns: ColumnDef<Transaction>[] = [
     {
         accessorKey: 'id',
-        header: 'ID'
+        header: 'ID',
     },
     {
         accessorKey: 'amount',
+        sortingFn: (a, b) => Math.abs(a.original.amount) - Math.abs(b.original.amount),
         header: ({ column }) => {
             return (
-                <Button className="flex items-center gap-1"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button
+                    className="flex items-center gap-1"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === 'asc')
+                    }
+                >
                     Amount
                     <ArrowUpDown className="h-4 w-4" />
                 </Button>
@@ -27,8 +32,12 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
         id: 'type',
         header: ({ column }) => {
             return (
-                <Button className="flex items-center gap-1"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button
+                    className="flex items-center gap-1"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === 'asc')
+                    }
+                >
                     Type
                     <ArrowUpDown className="h-4 w-4" />
                 </Button>
@@ -42,16 +51,22 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     },
     {
         id: 'created_at',
-        accessorFn: (transaction) => dayjs(transaction.created_at).format('DD.MM.YYYY - HH:mm:ss'),
-        sortingFn: (a, b) => dayjs(a.original.created_at).diff(b.original.created_at),
+        accessorFn: (transaction) =>
+            dayjs(transaction.created_at).format('DD.MM.YYYY - HH:mm:ss'),
+        sortingFn: (a, b) =>
+            dayjs(a.original.created_at).diff(b.original.created_at),
         header: ({ column }) => {
             return (
-                <Button className="flex items-center gap-1"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                <Button
+                    className="flex items-center gap-1"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === 'asc')
+                    }
+                >
                     Date
                     <ArrowUpDown className="h-4 w-4" />
                 </Button>
             );
-        }
-    }
+        },
+    },
 ];
