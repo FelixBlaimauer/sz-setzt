@@ -39,6 +39,13 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function bets(Request $request): Response
+    {
+        return Inertia::render('Profile/Bets', [
+           'bets' => $request->user()->bets()->with('bettable')->get()
+        ]);
+    }
+
     /**
      * Update the user's profile information.
      */

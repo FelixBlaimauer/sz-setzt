@@ -1,12 +1,20 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link, router, usePage } from '@inertiajs/react';
-import { PropsWithChildren, ReactNode, useState } from 'react';
-import { ArrowRightLeft, CircleUserRound, Coins, LogOut, PiggyBank, RefreshCw, Shield } from 'lucide-react';
 import PrimaryButton from '@/Components/PrimaryButton';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { cn } from '@/lib/utils';
+import { Link, router, usePage } from '@inertiajs/react';
+import {
+    ArrowRightLeft,
+    CircleUserRound,
+    Coins,
+    LogOut, Notebook,
+    PiggyBank,
+    RefreshCw,
+    Shield
+} from 'lucide-react';
+import { PropsWithChildren, ReactNode, useState } from 'react';
 
 type Role = 'admin' | 'guest';
 
@@ -150,6 +158,13 @@ export default function Authenticated({
                                                     <ArrowRightLeft className="h-4 w-4" />
                                                     Transactions
                                                 </Dropdown.Link>
+                                                <Dropdown.Link
+                                                    href={route('profile.bets')}
+                                                    className="flex items-center gap-2"
+                                                >
+                                                    <Notebook className="size-4" />
+                                                    Wetten
+                                                </Dropdown.Link>
                                                 <div className="my-1 border-t"></div>
                                                 <Dropdown.Link
                                                     href={route('logout')}
@@ -292,6 +307,13 @@ export default function Authenticated({
                                     >
                                         <ArrowRightLeft className="h-4 w-4" />
                                         Transactions
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        href={route('profile.bets')}
+                                        className="items-center gap-2"
+                                    >
+                                        <Notebook className="size-4" />
+                                        Wetten
                                     </ResponsiveNavLink>
                                     <div className="border-t" />
                                     <ResponsiveNavLink

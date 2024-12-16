@@ -1,35 +1,31 @@
 import { DataTable } from '@/Components/DataTable';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Transaction } from '@/lib/types/Transaction';
-import { transactionColumns } from '@/Pages/Profile/Partials/TransactionColumns';
+import { Bet } from '@/lib/types/Bet';
+import { betsColumns } from '@/Pages/Profile/Partials/BetsColumns';
 import { PageProps } from '@/types';
 import { Head } from '@inertiajs/react';
 
-export default function TransactionScreen({
-    auth,
-    transactions,
-}: PageProps<{ transactions: Transaction[] }>) {
+export default function BetsScreen({ bets, auth }: PageProps<{ bets: Bet[] }>) {
+    console.log(bets);
+
     return (
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Transactions
+                    Wetten
                 </h2>
             }
         >
-            <Head title="Transactions" />
+            <Head title="Wetten" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                     <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                         <h2 className="mb-4 text-xl font-semibold text-slate-950">
-                            Recent Transactions
+                            Übersicht
                         </h2>
 
-                        <DataTable<Transaction>
-                            columns={transactionColumns}
-                            data={transactions}
-                        />
+                        <DataTable<Bet> columns={betsColumns} data={bets} />
                     </div>
                 </div>
             </div>

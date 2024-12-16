@@ -16,6 +16,8 @@ class GameBet extends Model
         'team_id',
     ];
 
+    protected $with = ['team', 'game'];
+
     public function bet(): MorphOne
     {
         return $this->morphOne(Bet::class, 'bettable');
