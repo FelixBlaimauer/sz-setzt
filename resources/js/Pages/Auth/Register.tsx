@@ -26,7 +26,12 @@ export default function Register() {
         <GuestLayout>
             <Head title="Register" />
 
-            <form onSubmit={submit}>
+            <h2 className="text-2xl font-medium">Registrierung</h2>
+            <p className="leading-tight text-slate-600">
+                Erstelle einen Account um Zugriff auf zusätzliche Funktionen zu erhalten.
+            </p>
+
+            <form onSubmit={submit} className="mt-2">
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 

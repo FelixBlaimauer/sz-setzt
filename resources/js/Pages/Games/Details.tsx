@@ -7,8 +7,15 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Team } from '@/lib/types/Team';
 import { PageProps } from '@/types';
 import { Radio, RadioGroup } from '@headlessui/react';
-import { Head, useForm } from '@inertiajs/react';
-import { CandyCane, Circle, CircleCheck, Coins } from 'lucide-react';
+import { Head, router, useForm } from '@inertiajs/react';
+import dayjs from 'dayjs';
+import {
+    CandyCane,
+    Circle,
+    CircleCheck,
+    CircleSlash,
+    Coins,
+} from 'lucide-react';
 import { useState } from 'react';
 
 interface PlaceBetFormData {
@@ -19,6 +26,11 @@ interface PlaceBetFormData {
 
 export default function Details({ auth, game }: PageProps<{ game: Game }>) {
     const [selectedTeam, setSelectedTeam] = useState<Team>();
+    const [now] = useState(dayjs());
+    const [isLive] = useState(
+        now.isAfter(dayjs(game.played_at)) &&
+            now.isBefore(dayjs(game.played_at).add(game.duration, 'minutes')),
+    );
 
     const {
         data,
@@ -54,8 +66,9 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
                 <GameCard
                     game={game}
                     showScore={true}
-                    isLive={true}
+                    isLive={isLive}
                     showDetails={false}
+                    onTimeChange={() => router.reload()}
                 />
             </div>
 
@@ -66,54 +79,80 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
 
                 <div className="flex flex-col flex-wrap justify-center border-b p-2 sm:flex-row">
                     <div className="sm:w-1/2 sm:min-w-[320px] sm:pe-2">
-                        <p className="flex gap-1 text-center text-2xl">
-                            <span className="font-semibold">
+                        <p className="mb-2 gap-1 text-center text-2xl leading-6 sm:flex">
+                            <span className="font-medium">
                                 {game.teams[0].name}:
                             </span>
                             {game.teams[0].goals.length}
                         </p>
                         <ul className="flex flex-col gap-2">
-                            {game.teams[0].goals.length > 0 &&
+                            {game.teams[0].goals.length > 0 ? (
                                 game.teams[0].goals.map((goal) => (
                                     <li
                                         key={goal.id}
-                                        className="flex items-center gap-4 rounded-lg bg-slate-50/40 p-4"
+                                        className="flex items-center justify-between rounded-lg bg-slate-50/50 p-4"
                                     >
-                                        <CandyCane className="size-6 text-rose-400" />
-                                        <div className="leading-4 text-slate-800">
-                                            <p>{goal.minute}'</p>
-                                            <p className="font-semibold text-slate-900">
-                                                {goal.player}
-                                            </p>
+                                        <div className="flex items-center gap-4">
+                                            <CandyCane className="size-6 text-rose-400" />
+                                            <div className="leading-4 text-slate-800">
+                                                <p className="font-semibold text-slate-900">
+                                                    {goal.player.name}
+                                                </p>
+                                                <p>
+                                                    {goal.player.shirt_number}
+                                                </p>
+                                            </div>
                                         </div>
+                                        <p className="text-lg">
+                                            {goal.minute}'
+                                        </p>
                                     </li>
-                                ))}
+                                ))
+                            ) : (
+                                <div className="flex items-center gap-1 rounded-lg bg-slate-50/40 p-4 text-slate-500">
+                                    <CircleSlash className="size-4" />
+                                    <p>Noch keine Tore</p>
+                                </div>
+                            )}
                         </ul>
                     </div>
                     <div className="m-4 block border-b sm:hidden" />
                     <div className="sm:w-1/2 sm:min-w-[320px] sm:ps-2">
-                        <p className="flex gap-1 text-center text-2xl">
-                            <span className="font-semibold">
+                        <p className="mb-2 gap-1 text-center text-2xl leading-6 sm:flex">
+                            <span className="font-medium">
                                 {game.teams[1].name}:
                             </span>
                             {game.teams[1].goals.length}
                         </p>
                         <ul className="flex flex-col gap-2">
-                            {game.teams[1].goals.length > 0 &&
+                            {game.teams[1].goals.length > 0 ? (
                                 game.teams[1].goals?.map((goal) => (
                                     <li
                                         key={goal.id}
-                                        className="flex flex-row-reverse items-center gap-4 rounded-lg bg-navy-400/5 p-4"
+                                        className="flex flex-row-reverse items-center justify-between rounded-lg bg-navy-400/5 p-4"
                                     >
-                                        <CandyCane className="size-6 text-rose-400" />
-                                        <div className="text-right leading-4 text-slate-800">
-                                            <p>{goal.minute}'</p>
-                                            <p className="font-semibold text-slate-900">
-                                                {goal.player}
-                                            </p>
+                                        <div className="flex flex-row-reverse items-center gap-4">
+                                            <CandyCane className="size-6 text-rose-400" />
+                                            <div className="text-right leading-4 text-slate-800">
+                                                <p className="font-semibold text-slate-900">
+                                                    {goal.player.name}
+                                                </p>
+                                                <p>
+                                                    {goal.player.shirt_number}
+                                                </p>
+                                            </div>
                                         </div>
+                                        <p className="text-lg">
+                                            {goal.minute}'
+                                        </p>
                                     </li>
-                                ))}
+                                ))
+                            ) : (
+                                <div className="flex items-center gap-1 rounded-lg bg-slate-50/40 p-4 text-slate-500">
+                                    <CircleSlash className="size-4" />
+                                    <p>Noch keine Tore</p>
+                                </div>
+                            )}
                         </ul>
                     </div>
                 </div>

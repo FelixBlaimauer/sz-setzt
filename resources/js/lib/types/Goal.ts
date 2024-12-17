@@ -1,5 +1,7 @@
+import { Player } from '@/lib/types/Player';
+
 export interface Goal {
     id: string;
-    player: string;
+    player: Player;
     minute: number;
 }

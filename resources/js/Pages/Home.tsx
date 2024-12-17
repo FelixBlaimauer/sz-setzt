@@ -1,11 +1,9 @@
 import GameCard, { Game } from '@/Components/GameCard';
-import PrimaryButton from '@/Components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { cn, ODD_FORMATS, OddFormat } from '@/lib/utils';
+import { ODD_FORMATS, OddFormat } from '@/lib/utils';
 import { PageProps } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import dayjs from 'dayjs';
-import { RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Home({ auth, games }: PageProps<{ games: Game[] }>) {
@@ -79,7 +77,7 @@ export default function Home({ auth, games }: PageProps<{ games: Game[] }>) {
                                     : 'Live Spiel'}
                             </h2>
                             <div className="relative">
-                                <div className="animate-blink absolute aspect-square h-3 rounded-full bg-red-500" />
+                                <div className="absolute aspect-square h-3 animate-blink rounded-full bg-red-500" />
                                 <div className="absolute aspect-square h-3 animate-ping rounded-full bg-red-400 delay-700 duration-1000" />
                             </div>
                         </div>

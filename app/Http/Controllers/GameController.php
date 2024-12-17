@@ -38,19 +38,22 @@ class GameController extends Controller
             'id' => $game->id,
             'played_at' => $game->played_at->toISOString(),
             'duration' => $game->duration,
-            'teams' => $game->teams->map(fn(Team $team) => [
-                'id' => $team->id,
-                'name' => $team->name,
-                'odds' => rand(11, 20) / 10,
-                'goals' => $team->goals
-                        ->where('game_id', $game->id)
-                        ->map(fn(Goal $goal) => [
-                            'id' => $goal->id,
-                            'player' => $goal->player->name,
-                            'minute' => $goal->minute,
-                            ]) ?? [],
-                'stats' => $team->stats
-            ])
+            'teams' => $game->teams->map(function(Team $team) use ($game) {
+                $goals = $game->goals->where('team_id', $team->id)->values();
+
+                return [
+                    'id' => $team->id,
+                    'name' => $team->name,
+                    'odds' => rand(11, 20) / 10,
+                    'gogo' => json_encode($goals),
+                    'goals' => $goals->map(fn(Goal $goal) => [
+                                    'id' => $goal->id,
+                                    'player' => $goal->player,
+                                    'minute' => $goal->minute,
+                                ]) ?? [],
+                    'stats' => $team->stats
+                ];
+            })
         ];
     }
 

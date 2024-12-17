@@ -8,6 +8,7 @@ export interface Game {
     id: string;
     played_at: string;
     duration: number;
+    gogo: string;
     teams: Team[];
 }
 
@@ -17,6 +18,7 @@ export interface GameCardProps {
     showScore: boolean;
     showOdds: boolean;
     showDetails: boolean;
+    onTimeChange?: () => void;
     oddFormat: OddFormat;
 }
 
@@ -27,6 +29,7 @@ export default function GameCard({
     showOdds = true,
     showScore = true,
     showDetails = true,
+    onTimeChange,
 }: GameCardProps) {
     const [now, setNow] = useState<Dayjs>();
     const user = usePage().props.auth.user;
@@ -36,6 +39,7 @@ export default function GameCard({
 
         const interval = setInterval(() => {
             setNow(dayjs());
+            onTimeChange?.();
         }, 1000);
 
         return () => clearInterval(interval);
@@ -125,8 +129,7 @@ export default function GameCard({
                 {showScore && (
                     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-mono">
                         <p className="text-6xl font-bold -tracking-widest text-slate-900">
-                            {game.teams[0].goals.length ?? '0'}:
-                            {game.teams[1].goals.length ?? '0'}
+                            {game.teams[0].goals.length}:{game.teams[1].goals.length}
                         </p>
                         {isLive && now && (
                             <p className="-mt-1 text-xl font-medium text-slate-700">

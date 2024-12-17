@@ -9,10 +9,11 @@ import {
     ArrowRightLeft,
     CircleUserRound,
     Coins,
-    LogOut, Notebook,
+    LogOut,
+    Notebook,
     PiggyBank,
     RefreshCw,
-    Shield
+    Shield,
 } from 'lucide-react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
