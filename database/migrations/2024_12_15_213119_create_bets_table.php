@@ -18,8 +18,7 @@ return new class extends Migration
             $table->enum('type', array_column(BetType::cases(), 'name'));
             $table->unsignedInteger('amount');
             $table->morphs('bettable');
-            $table->ulid('transaction_id');
-            $table->foreign('transaction_id')->references('id')->on('transactions')->cascadeOnDelete();
+            $table->foreignUlid('transaction_id')->nullable()->constrained('transactions')->cascadeOnDelete();
             $table->timestamps();
         });
     }

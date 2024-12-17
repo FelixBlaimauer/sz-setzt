@@ -31,7 +31,7 @@ export function formatOdds(odds: number, format: OddFormat = 'decimal') {
         return `${reducedNumerator}/${reducedDenominator}`;
     }
     if (format === 'moneyline') {
-        if (odds >= 2) return `+${(odds - 1) * 100}`;
+        if (odds >= 2) return `+${((odds - 1) * 100).toFixed(0)}`;
         return `-${(100 / (odds - 1)).toFixed(0)}`;
     }
 }

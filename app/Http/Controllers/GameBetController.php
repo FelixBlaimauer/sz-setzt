@@ -36,6 +36,10 @@ class GameBetController extends Controller
 
         $amount = (int) $request->input('amount');
 
+        if ($amount < 0) {
+            return back()->withErrors(['amount' => 'Cannot bet negative amount!']);
+        }
+
         if ($user->balance < $amount) {
             return back()->withErrors(['amount' => 'Insufficient funds!']);
         }

@@ -36,16 +36,19 @@ class GameController extends Controller
     {
         return [
             'id' => $game->id,
+            'name' => $game->name,
             'played_at' => $game->played_at->toISOString(),
             'duration' => $game->duration,
+            'group' => $game->group->name,
             'teams' => $game->teams->map(function(Team $team) use ($game) {
                 $goals = $game->goals->where('team_id', $team->id)->values();
 
                 return [
                     'id' => $team->id,
                     'name' => $team->name,
-                    'odds' => rand(11, 20) / 10,
-                    'gogo' => json_encode($goals),
+//                    'odds' => rand(11, 20) / 10,
+                    'odds' => $game->getTeamOdds($team),
+//                    'otto' => $game->gameBets->where('team_id', $team->id)->map(fn($t) => $t->bet)->sum('amount'),
                     'goals' => $goals->map(fn(Goal $goal) => [
                                     'id' => $goal->id,
                                     'player' => $goal->player,

@@ -1,24 +1,36 @@
 import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/Components/ui/table';
+import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
     getSortedRowModel,
     SortingState,
-    useReactTable
+    useReactTable,
 } from '@tanstack/react-table';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    defaultSorting?: SortingState;
+    striped?: boolean;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    defaultSorting,
+    striped,
 }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = useState<SortingState>([]);
+    const [sorting, setSorting] = useState<SortingState>(defaultSorting ?? []);
 
     const table = useReactTable({
         data,
@@ -28,7 +40,7 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         state: {
             sorting,
-        }
+        },
     });
 
     return (
@@ -59,6 +71,7 @@ export function DataTable<TData, TValue>({
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && 'selected'}
+                                className={cn(striped && 'even:bg-muted')}
                             >
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>

@@ -5,6 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Team } from '@/lib/types/Team';
+import { cn, formatOdds } from '@/lib/utils';
 import { PageProps } from '@/types';
 import { Radio, RadioGroup } from '@headlessui/react';
 import { Head, router, useForm } from '@inertiajs/react';
@@ -16,7 +17,7 @@ import {
     CircleSlash,
     Coins,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface PlaceBetFormData {
     amount: number;
@@ -31,6 +32,10 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
         now.isAfter(dayjs(game.played_at)) &&
             now.isBefore(dayjs(game.played_at).add(game.duration, 'minutes')),
     );
+
+    useEffect(() => {
+        console.log('team', selectedTeam);
+    }, [selectedTeam]);
 
     const {
         data,
@@ -79,7 +84,7 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
 
                 <div className="flex flex-col flex-wrap justify-center border-b p-2 sm:flex-row">
                     <div className="sm:w-1/2 sm:min-w-[320px] sm:pe-2">
-                        <p className="mb-2 gap-1 text-center text-2xl leading-6 sm:flex">
+                        <p className="mb-2 flex justify-center gap-1 text-center text-2xl leading-6 sm:justify-start">
                             <span className="font-medium">
                                 {game.teams[0].name}:
                             </span>
@@ -118,7 +123,7 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
                     </div>
                     <div className="m-4 block border-b sm:hidden" />
                     <div className="sm:w-1/2 sm:min-w-[320px] sm:ps-2">
-                        <p className="mb-2 gap-1 text-center text-2xl leading-6 sm:flex">
+                        <p className="mb-2 flex justify-center gap-1 text-center text-2xl leading-6 sm:justify-start">
                             <span className="font-medium">
                                 {game.teams[1].name}:
                             </span>
@@ -178,11 +183,25 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
                                 <Radio
                                     key={team.id}
                                     value={team}
-                                    className="group flex items-center gap-2 border-b p-2 text-slate-200 transition last:border-0 hover:text-slate-600 data-[checked]:text-slate-950"
+                                    className="group flex items-center justify-between border-b p-2 text-slate-200 transition last:border-0 hover:text-slate-600 data-[checked]:text-slate-950"
                                 >
-                                    <CircleCheck className="hidden size-5 text-greenquoise-400 group-data-[checked]:block" />
-                                    <Circle className="size-5 text-slate-200 group-hover:text-slate-600 group-data-[checked]:hidden" />
-                                    <p>{team.name}</p>
+                                    <div className="flex items-center gap-2">
+                                        <CircleCheck className="hidden size-5 text-greenquoise-400 group-data-[checked]:block" />
+                                        <Circle className="size-5 text-slate-200 group-hover:text-slate-600 group-data-[checked]:hidden" />
+                                        <p>{team.name}</p>
+                                    </div>
+
+                                    <span
+                                        className={cn(
+                                            'font-medium',
+                                            team.odds > 2
+                                                ? 'text-navy-400'
+                                                : 'text-greenquoise-400',
+                                        )}
+                                    >
+                                        {team?.odds &&
+                                            formatOdds(team.odds, 'decimal')}
+                                    </span>
                                 </Radio>
                             ))}
                         </RadioGroup>
@@ -211,6 +230,17 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
                                 <Coins className="-ms-2 size-6 min-w-6 text-amber-500" />
                             </div>
 
+                            {data.amount > 0 && selectedTeam && (
+                                <p className="text-slate-600">
+                                    Möglicher Gewinn:
+                                    <span className="ms-1 font-medium">
+                                        {(
+                                            data.amount * selectedTeam?.odds
+                                        ).toFixed(0)}
+                                    </span>
+                                </p>
+                            )}
+
                             <InputError
                                 message={errors.amount}
                                 className="mt-1"
@@ -218,7 +248,9 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
                         </div>
 
                         <PrimaryButton
-                            disabled={!selectedTeam}
+                            disabled={
+                                !selectedTeam || data.amount <= 0 || processing
+                            }
                             className="flex w-full justify-center"
                         >
                             <span className="text-sm">Wette plazieren</span>

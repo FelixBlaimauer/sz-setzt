@@ -5,10 +5,11 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 
 export interface Game {
+    name: string;
     id: string;
     played_at: string;
     duration: number;
-    gogo: string;
+    group: string;
     teams: Team[];
 }
 
@@ -46,13 +47,13 @@ export default function GameCard({
     }, [isLive]);
 
     return (
-        <div className="mx-4 mt-2 overflow-hidden rounded-lg bg-white shadow-md">
-            {/*<div className="flex items-center justify-center border-b p-2">*/}
-            {/*    <p className="font-mono text-4xl font-bold -tracking-widest text-slate-900">*/}
-            {/*        {game.teams[0].goals.length ?? '0'}:*/}
-            {/*        {game.teams[1].goals.length ?? '0'}*/}
-            {/*    </p>*/}
-            {/*</div>*/}
+        <div className="mx-4 overflow-hidden rounded-lg bg-white shadow-md">
+            <div className="relative flex items-center justify-center border-b p-2 text-xl text-slate-950">
+                <p className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600">
+                    {game.group}
+                </p>
+                <p className="font-medium">{game.name}</p>
+            </div>
             <div
                 className={cn(
                     'relative flex p-4',
@@ -65,8 +66,8 @@ export default function GameCard({
                 <div
                     className={cn(
                         'flex grow flex-col justify-between gap-8',
-                        isLive && 'gap-24',
                         showScore && 'gap-14',
+                        isLive && 'gap-24 sm:gap-14',
                     )}
                 >
                     <div>
@@ -129,7 +130,8 @@ export default function GameCard({
                 {showScore && (
                     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-mono">
                         <p className="text-6xl font-bold -tracking-widest text-slate-900">
-                            {game.teams[0].goals.length}:{game.teams[1].goals.length}
+                            {game.teams[0].goals.length}:
+                            {game.teams[1].goals.length}
                         </p>
                         {isLive && now && (
                             <p className="-mt-1 text-xl font-medium text-slate-700">

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Game;
+use App\Models\Group;
 use App\Models\Team;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -14,16 +15,20 @@ class GameSeeder extends Seeder
      */
     public function run(): void
     {
-        $teams = Team::all();
-        $games = Game::factory(8)->create();
-        $liveGame = Game::factory()->create([
-            'played_at' => now(),
-        ]);
+        $games = Group::all()->flatMap(function(Group $group) {
+            $teams = $group->teams;
 
-        $games->each(function ($game) use ($teams) {
-            $game->teams()->attach($teams->random(2));
+            $games = Game::factory(4)->create([
+                'group_id' => $group->id,
+            ]);
+
+            $games->each(function(Game $game) use ($teams) {
+                $game->teams()->attach($teams->random(2));
+            });
+
+            return $games;
         });
 
-        $liveGame->teams()->attach($teams->random(2));
+        $games->random()->update(['played_at' => now()]);
     }
 }

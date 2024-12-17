@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('goals', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->unsignedSmallInteger('minute');
-            $table->foreignUlid('game_id')->constrained()->nullOnDelete();
-            $table->foreignUlid('team_id')->constrained()->nullOnDelete();
-            $table->foreignUlid('player_id')->constrained()->nullOnDelete();
+            $table->foreignUlid('game_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignUlid('team_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignUlid('player_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('name');
             $table->unsignedInteger('shirt_number');
-            $table->foreignUlid('team_id')->constrained()->nullOnDelete();
+            $table->foreignUlid('team_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

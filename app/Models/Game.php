@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -19,6 +20,8 @@ class Game extends Model
         'name',
         'played_at',
         'duration',
+        'group_id',
+        'stage'
     ];
 
     protected $casts = [
@@ -33,6 +36,11 @@ class Game extends Model
     public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class);
+    }
+
+    public function gameBets(): HasMany
+    {
+        return $this->hasMany(GameBet::class);
     }
 
     protected function endsAt(): Attribute {
@@ -64,5 +72,24 @@ class Game extends Model
                 return $team1Goals > $team2Goals ? $team1 : $team2;
             }
         )->shouldCache();
+    }
+
+    public function getTeamOdds(Team $team): float
+    {
+        $bets = $this->gameBets;
+
+        $mySum = $bets->where('team_id', $team->id)->map(fn($bet) => $bet->bet)->sum('amount');
+        $otherSum = $bets->where('team_id', '!=', $team->id)->map(fn($bet) => $bet->bet)->sum('amount');
+
+        if ($mySum + $otherSum === 0) {
+            return 1;
+        }
+
+        return ($mySum + $otherSum) / ($mySum);
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
     }
 }

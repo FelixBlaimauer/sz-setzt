@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BetController;
 use App\Http\Controllers\GameBetController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TransactionController;
@@ -25,6 +26,8 @@ Route::get('/', function () {
 
 Route::get('/games', [GameController::class, 'userGames'])->name('games.index');
 Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
+
+Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
