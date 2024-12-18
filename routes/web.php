@@ -8,6 +8,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TransactionController;
+use App\Models\Bet;
 use App\Models\Game;
 use App\Models\Team;
 use App\Models\Transaction;

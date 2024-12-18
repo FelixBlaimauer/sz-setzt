@@ -95,7 +95,7 @@ export default function Authenticated({
                             </div>
                         </div>
 
-                        {user && (
+                        {user ? (
                             <div className="hidden sm:ms-6 sm:flex sm:items-center">
                                 <Link
                                     href={route('profile.deposit')}
@@ -176,6 +176,14 @@ export default function Authenticated({
                                     </Dropdown>
                                 </div>
                             </div>
+                        ) : (
+                            <Link
+                                className="hidden items-center gap-2 text-slate-600 transition hover:text-slate-950 sm:flex"
+                                href={route('login')}
+                            >
+                                <CircleUserRound className="size-4" />
+                                <span>Log In</span>
+                            </Link>
                         )}
 
                         <div className="-me-2 flex items-center sm:hidden">
@@ -313,7 +321,10 @@ export default function Authenticated({
                                 </div>
                             </>
                         ) : (
-                            <ResponsiveNavLink href={route('login')} className="items-center gap-2">
+                            <ResponsiveNavLink
+                                href={route('login')}
+                                className="items-center gap-2"
+                            >
                                 <CircleUserRound className="size-4" />
                                 Log In
                             </ResponsiveNavLink>

@@ -144,7 +144,7 @@ class Game extends Model
                 : static::all()->where('stage', $next)->values()->first()?->id,
             'tournamentRoundText' => array_search($this->stage, array_column(TournamentStage::cases(), 'name')),
             'startTime' => $this->played_at->format('H:m'),
-            'state' => 'DONE',
+            'state' => null,
             'participants' => $this->teams->map(function (Team $team) {
                 $goals = $this->goals->where('team_id', $team->id)->values();
                 $winner = $this->winner;

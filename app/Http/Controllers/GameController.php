@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bet;
 use App\Models\Game;
 use App\Models\Goal;
 use App\Models\Team;
@@ -34,8 +35,17 @@ class GameController extends Controller
 
     public function show(Request $request, Game $game)
     {
+        if (\Auth::check()) {
+            $bets = \Auth::user()->bets;
+
+            return Inertia::render('Games/Details', [
+                'game' => fn() => $game->serializeGame(),
+                'bets' => fn() => $bets->load('bettable')
+            ]);
+        }
+
         return Inertia::render('Games/Details', [
-            'game' => fn() => $game->serializeGame()
+            'game' => fn() => $game->serializeGame(),
         ]);
     }
 

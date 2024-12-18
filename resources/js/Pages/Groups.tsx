@@ -1,12 +1,13 @@
 import { DataTable } from '@/Components/DataTable';
 import { Game } from '@/Components/GameCard';
+import Match from '@/Components/Match';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Group, GroupTeam } from '@/lib/types/Group';
 import { groupColumns } from '@/Pages/Profile/Partials/GroupColumns';
 import { PageProps } from '@/types';
 import {
-    Match,
+    // Match,
     SingleEliminationBracket,
     SVGViewer,
 } from '@g-loot/react-tournament-brackets/dist/esm';
@@ -39,7 +40,7 @@ export default function GroupsPage({
                 </h2>
             }
         >
-            <Head title="Home" />
+            <Head title="Standings" />
 
             <div className="mx-auto mt-4 max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
@@ -92,6 +93,17 @@ export default function GroupsPage({
                         <SingleEliminationBracket
                             matchComponent={Match}
                             matches={group_games}
+                            options={{
+                                style: {
+                                    roundHeader: {
+                                        isShown: false,
+                                        fontColor: '#111',
+                                        fontFamily: 'Kanit',
+                                    },
+                                    connectorColor: '#D7D7DC',
+                                    connectorColorHighlight: '#34343C',
+                                },
+                            }}
                             // matches={[
                             //     {
                             //         id: 0,

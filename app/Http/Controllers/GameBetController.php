@@ -34,6 +34,10 @@ class GameBetController extends Controller
     {
         $user = Auth::user();
 
+        if ($user == null) {
+            abort(403);
+        }
+
         $amount = (int) $request->input('amount');
 
         if ($amount < 0) {
@@ -63,7 +67,6 @@ class GameBetController extends Controller
             $gameBet->bet()->create([
                 'user_id' => $user->id,
                 'type' => BetType::GAME_BET,
-                'bettable_id' => $gameBet->id,
                 'amount' => $amount,
                 'transaction_id' => $transaction->id,
             ]);

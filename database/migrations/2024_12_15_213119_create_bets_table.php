@@ -14,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('bets', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUlid('user_id')->constrained('users')->cascadeOnDelete();
             $table->enum('type', array_column(BetType::cases(), 'name'));
             $table->unsignedInteger('amount');
-            $table->morphs('bettable');
+            $table->ulidMorphs('bettable');
             $table->foreignUlid('transaction_id')->nullable()->constrained('transactions')->cascadeOnDelete();
             $table->timestamps();
         });
