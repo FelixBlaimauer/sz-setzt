@@ -83,7 +83,7 @@ export const betsColumns: ColumnDef<Bet>[] = [
                             <span className="mr-1 font-medium text-slate-600 group-hover:text-navy-400">
                                 Game:
                             </span>
-                            {bet.bettable.game.id}
+                            {bet.bettable.game.name}
                         </Link>
                         <p>
                             <span className="mr-1 font-medium text-slate-600 group-hover:text-navy-400">

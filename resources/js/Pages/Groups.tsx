@@ -7,7 +7,7 @@ import { Group, GroupTeam } from '@/lib/types/Group';
 import { groupColumns } from '@/Pages/Profile/Partials/GroupColumns';
 import { PageProps } from '@/types';
 import {
-    // Match,
+    MatchType,
     SingleEliminationBracket,
     SVGViewer,
 } from '@g-loot/react-tournament-brackets/dist/esm';
@@ -16,21 +16,17 @@ import useSize from '@react-hook/size';
 import { useRef } from 'react';
 
 interface GroupsPageProps {
-    games: Game[];
-    group_games: any;
+    matches: MatchType[];
     groups: Group[];
 }
 
 export default function GroupsPage({
-    games,
     groups,
-    group_games,
+    matches,
     auth,
 }: PageProps<GroupsPageProps>) {
     const bracketContainer = useRef(null);
     const [width, height] = useSize(bracketContainer);
-
-    console.log(group_games);
 
     return (
         <AuthenticatedLayout
@@ -92,7 +88,7 @@ export default function GroupsPage({
                     >
                         <SingleEliminationBracket
                             matchComponent={Match}
-                            matches={group_games}
+                            matches={matches}
                             options={{
                                 style: {
                                     roundHeader: {
@@ -104,56 +100,6 @@ export default function GroupsPage({
                                     connectorColorHighlight: '#34343C',
                                 },
                             }}
-                            // matches={[
-                            //     {
-                            //         id: 0,
-                            //         name: 'Semi',
-                            //         nextMatchId: 1,
-                            //         tournamentRoundText: '3',
-                            //         startTime: '2024-12-18',
-                            //         state: 'PLAYED',
-                            //         participants: [
-                            //             {
-                            //                 id: '1',
-                            //                 resultText: 'LOST',
-                            //                 isWinner: false,
-                            //                 status: null,
-                            //                 name: 'Team 1',
-                            //             },
-                            //             {
-                            //                 id: '2',
-                            //                 resultText: 'WON',
-                            //                 isWinner: true,
-                            //                 status: null,
-                            //                 name: 'Team 2',
-                            //             },
-                            //         ],
-                            //     },
-                            //     {
-                            //         id: 1,
-                            //         name: 'Final',
-                            //         nextMatchId: null,
-                            //         tournamentRoundText: '4',
-                            //         startTime: '2024-12-18',
-                            //         state: 'PLAYED',
-                            //         participants: [
-                            //             {
-                            //                 id: '1',
-                            //                 resultText: 'LOST',
-                            //                 isWinner: false,
-                            //                 status: null,
-                            //                 name: 'Team 1',
-                            //             },
-                            //             {
-                            //                 id: '2',
-                            //                 resultText: 'WON',
-                            //                 isWinner: true,
-                            //                 status: null,
-                            //                 name: 'Team 2',
-                            //             },
-                            //         ],
-                            //     },
-                            // ]}
                             svgWrapper={({ children, ...props }) => (
                                 <SVGViewer
                                     width={width}

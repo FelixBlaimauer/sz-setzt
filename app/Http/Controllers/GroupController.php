@@ -14,12 +14,7 @@ class GroupController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Groups', [
-            'games' => function () {
-                return Game::all()
-                    ->where('stage', '!=', TournamentStage::GROUP_STAGE)
-                    ->map(fn(Game $game) => $game->serializeGame());
-            },
-            'group_games' => function () {
+            'matches' => function () {
                 return Game::all()
                     ->where('stage', '!=', TournamentStage::GROUP_STAGE)
                     ->values()

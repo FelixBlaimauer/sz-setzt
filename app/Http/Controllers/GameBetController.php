@@ -39,6 +39,12 @@ class GameBetController extends Controller
         }
 
         $amount = (int) $request->input('amount');
+        $team_id = $request->input('team');
+        $game_id = $request->input('game');
+
+        if ($user->bets->load('bettable')->where('bettable.game_id', $game_id)->count() > 0) {
+            return back()->withErrors(['game' => 'You have already placed a bet on this game!']);
+        }
 
         if ($amount < 0) {
             return back()->withErrors(['amount' => 'Cannot bet negative amount!']);
@@ -48,10 +54,10 @@ class GameBetController extends Controller
             return back()->withErrors(['amount' => 'Insufficient funds!']);
         }
 
-        \DB::transaction(function () use ($amount, $request, $user) {
+        \DB::transaction(function () use ($team_id, $game_id, $amount, $request, $user) {
             $gameBet = new GameBet([
-                'game_id' => $request->input('game'),
-                'team_id' => $request->input('team'),
+                'game_id' => $game_id,
+                'team_id' => $team_id,
             ]);
 
             $gameBet->save();

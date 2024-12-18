@@ -14,8 +14,6 @@ export default function Home({ auth, games }: PageProps<{ games: Game[] }>) {
     const [oddFormat, setOddFormat] = useState<OddFormat>('decimal');
 
     useEffect(() => {
-        console.log(games);
-
         const now = dayjs();
 
         const liveGames: Game[] = [];

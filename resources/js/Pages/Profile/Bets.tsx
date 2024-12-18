@@ -6,8 +6,6 @@ import { PageProps } from '@/types';
 import { Head } from '@inertiajs/react';
 
 export default function BetsScreen({ bets, auth }: PageProps<{ bets: Bet[] }>) {
-    console.log(bets);
-
     return (
         <AuthenticatedLayout
             header={

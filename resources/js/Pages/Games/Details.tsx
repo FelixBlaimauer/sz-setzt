@@ -4,6 +4,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Bet } from '@/lib/types/Bet';
 import { Team } from '@/lib/types/Team';
 import { cn, formatOdds } from '@/lib/utils';
 import { PageProps } from '@/types';
@@ -29,19 +30,13 @@ export default function Details({
     auth,
     game,
     bets,
-}: PageProps<{ game: Game; bets: any }>) {
-    console.log('bet', bets);
-
+}: PageProps<{ game: Game; bets: Bet[] }>) {
     const [selectedTeam, setSelectedTeam] = useState<Team>();
     const [now] = useState(dayjs());
     const [isLive] = useState(
         now.isAfter(dayjs(game.played_at)) &&
             now.isBefore(dayjs(game.played_at).add(game.duration, 'minutes')),
     );
-
-    useEffect(() => {
-        console.log('team', selectedTeam);
-    }, [selectedTeam]);
 
     const {
         data,
@@ -71,7 +66,9 @@ export default function Details({
         <AuthenticatedLayout
             header={<h2 className="text-2xl font-semibold">Spiel Details</h2>}
         >
-            <Head title={`${game.teams[0].name} vs. ${game.teams[1].name}`} />
+            <Head
+                title={`${game.name}: ${game.teams[0].name} vs. ${game.teams[1].name}`}
+            />
 
             <div className="mt-4">
                 <GameCard
@@ -79,7 +76,7 @@ export default function Details({
                     showScore={now.isAfter(dayjs(game.played_at))}
                     isLive={isLive}
                     showDetails={false}
-                    onTimeChange={() => router.reload({})}
+                    onTimeChange={() => router.reload({ only: ['game'] })}
                 />
             </div>
 
@@ -183,93 +180,120 @@ export default function Details({
                         Wette plazieren
                     </h2>
 
-                    <form className="space-y-2" onSubmit={createBet}>
-                        <RadioGroup
-                            by="name"
-                            value={selectedTeam}
-                            onChange={(e) => {
-                                setSelectedTeam(e);
-                                setData('team', e.id);
-                            }}
-                            className="overflow-hidden rounded-lg border text-slate-600"
-                        >
-                            {game.teams.map((team) => (
-                                <Radio
-                                    key={team.id}
-                                    value={team}
-                                    className="group flex items-center justify-between border-b p-2 text-slate-200 transition last:border-0 hover:text-slate-600 data-[checked]:text-slate-950"
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <CircleCheck className="hidden size-5 text-greenquoise-400 group-data-[checked]:block" />
-                                        <Circle className="size-5 text-slate-200 group-hover:text-slate-600 group-data-[checked]:hidden" />
-                                        <p>{team.name}</p>
-                                    </div>
-
-                                    <span
-                                        className={cn(
-                                            'font-medium',
-                                            team.odds > 2
-                                                ? 'text-navy-400'
-                                                : 'text-greenquoise-400',
-                                        )}
-                                    >
-                                        {team?.odds &&
-                                            formatOdds(team.odds, 'decimal')}
-                                    </span>
-                                </Radio>
-                            ))}
-                        </RadioGroup>
-
-                        <div>
-                            <InputLabel
-                                htmlFor="bet-amount"
-                                value="Einsatz"
-                                className="sr-only"
-                            />
-
-                            <div className="flex items-center gap-4 pr-4">
-                                <TextInput
-                                    id="bet-amount"
-                                    name="bet-amount"
-                                    onChange={(e) => {
-                                        setData('amount', e.target.value);
-                                        clearErrors('amount');
-                                    }}
-                                    value={data.amount}
-                                    className="mt-1 w-1 grow"
-                                    placeholder="Wett Einsatz"
-                                />
-
-                                <p>Coins</p>
-                                <Coins className="-ms-2 size-6 min-w-6 text-amber-500" />
-                            </div>
-
-                            {data.amount > 0 && selectedTeam && (
-                                <p className="text-slate-600">
-                                    Möglicher Gewinn:
-                                    <span className="ms-1 font-medium">
-                                        {(
-                                            data.amount * selectedTeam?.odds
-                                        ).toFixed(0)}
+                    {bets?.length > 0 ? (
+                        <div className="flex flex-col items-center gap-4 px-4 py-2 text-slate-600 sm:flex-row">
+                            <CircleCheck className="size-8 text-greenquoise-400" />
+                            <div className="leading-5">
+                                <p>
+                                    Du hast bereits eine Wette plaziert:{' '}
+                                    <span className="font-medium">
+                                        {bets[0].bettable.team.name}
                                     </span>
                                 </p>
-                            )}
-
-                            <InputError
-                                message={errors.amount}
-                                className="mt-1"
-                            />
+                                <div className="mt-2 flex items-center font-medium sm:mt-0">
+                                    <span>{bets[0].amount}</span>
+                                    <Coins className="ms-1 size-4 text-amber-500" />
+                                </div>
+                            </div>
                         </div>
+                    ) : (
+                        <form className="space-y-2" onSubmit={createBet}>
+                            <RadioGroup
+                                by="name"
+                                value={selectedTeam}
+                                onChange={(e) => {
+                                    setSelectedTeam(e);
+                                    setData('team', e.id);
+                                }}
+                                className="overflow-hidden rounded-lg border text-slate-600"
+                            >
+                                {game.teams.map((team) => (
+                                    <Radio
+                                        key={team.id}
+                                        value={team}
+                                        className="group flex items-center justify-between border-b p-2 text-slate-200 transition last:border-0 hover:text-slate-600 data-[checked]:text-slate-950"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <CircleCheck className="hidden size-5 text-greenquoise-400 group-data-[checked]:block" />
+                                            <Circle className="size-5 text-slate-200 group-hover:text-slate-600 group-data-[checked]:hidden" />
+                                            <p>{team.name}</p>
+                                        </div>
 
-                        <PrimaryButton
-                            disabled={
-                                !selectedTeam || data.amount <= 0 || processing
-                            }
-                            className="flex w-full justify-center"
-                        >
-                            <span className="text-sm">Wette plazieren</span>
-                        </PrimaryButton>
-                    </form>
+                                        <span
+                                            className={cn(
+                                                'font-medium',
+                                                team.odds > 2
+                                                    ? 'text-navy-400'
+                                                    : 'text-greenquoise-400',
+                                            )}
+                                        >
+                                            {team?.odds &&
+                                                formatOdds(
+                                                    team.odds,
+                                                    'decimal',
+                                                )}
+                                        </span>
+                                    </Radio>
+                                ))}
+                            </RadioGroup>
+
+                            <div>
+                                <InputLabel
+                                    htmlFor="bet-amount"
+                                    value="Einsatz"
+                                    className="sr-only"
+                                />
+
+                                <div className="flex items-center gap-4 pr-4">
+                                    <TextInput
+                                        id="bet-amount"
+                                        name="bet-amount"
+                                        onChange={(e) => {
+                                            setData('amount', e.target.value);
+                                            clearErrors('amount');
+                                        }}
+                                        value={data.amount}
+                                        className="mt-1 w-1 grow"
+                                        placeholder="Wett Einsatz"
+                                    />
+
+                                    <p>Coins</p>
+                                    <Coins className="-ms-2 size-6 min-w-6 text-amber-500" />
+                                </div>
+
+                                {data.amount > 0 && selectedTeam && (
+                                    <p className="text-slate-600">
+                                        Möglicher Gewinn:
+                                        <span className="ms-1 font-medium">
+                                            {(
+                                                data.amount * selectedTeam?.odds
+                                            ).toFixed(0)}
+                                        </span>
+                                    </p>
+                                )}
+
+                                <InputError
+                                    message={errors.game}
+                                    className="mt-1"
+                                />
+                                <InputError
+                                    message={errors.amount}
+                                    className="mt-1"
+                                />
+                            </div>
+
+                            <PrimaryButton
+                                disabled={
+                                    !selectedTeam ||
+                                    data.amount <= 0 ||
+                                    processing
+                                }
+                                className="flex w-full justify-center"
+                            >
+                                <span className="text-sm">Wette plazieren</span>
+                            </PrimaryButton>
+                        </form>
+                    )}
                 </div>
             )}
         </AuthenticatedLayout>

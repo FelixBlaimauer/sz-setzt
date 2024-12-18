@@ -40,7 +40,13 @@ class GameController extends Controller
 
             return Inertia::render('Games/Details', [
                 'game' => fn() => $game->serializeGame(),
-                'bets' => fn() => $bets->load('bettable')
+                'bets' => fn() => $bets
+                    ->load('bettable')
+                    ->filter(fn(Bet $bet) => $bet->bettable->game_id === $game->id
+                    )->values(),
+                'gg' => function() use ($game, $bets) {
+                return $bets->load('bettable')->where('bettable.game_id', $game->id)->count();
+                }
             ]);
         }
 

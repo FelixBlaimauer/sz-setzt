@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BetType;
 use Database\Factories\BetFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,6 +23,10 @@ class Bet extends Model
         'amount',
         'type',
         'transaction_id'
+    ];
+
+    protected $casts = [
+        'type' => BetType::class,
     ];
 
     public function bettable(): MorphTo
