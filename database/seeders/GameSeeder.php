@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\TournamentStage;
 use App\Models\Game;
 use App\Models\Group;
 use App\Models\Team;
@@ -28,6 +29,28 @@ class GameSeeder extends Seeder
 
             return $games;
         });
+
+        $teams = Team::all();
+
+        $quarterFinals = Game::factory(4)->create([
+            'name' => 'Quarter Final',
+            'stage' => TournamentStage::QUARTER_FINAL,
+        ])->each(fn(Game $game) => $game->teams()->attach($teams->random(2)));
+
+        $semiFinals = Game::factory(2)->create([
+            'name' => 'Semi Final',
+            'stage' => TournamentStage::SEMI_FINAL,
+        ])->each(fn(Game $game) => $game->teams()->attach($teams->random(2)));
+
+        $final = Game::factory(1)->create([
+            'name' => 'Final',
+            'stage' => TournamentStage::GRAND_FINAL,
+        ])->each(fn(Game $game) => $game->teams()->attach($teams->random(2)));
+
+        $loosersFinal = Game::factory(1)->create([
+            'name' => 'Loosers Final',
+            'stage' => TournamentStage::LOOSERS_FINAL,
+        ])->each(fn(Game $game) => $game->teams()->attach($teams->random(2)));
 
         $games->random()->update(['played_at' => now()]);
     }

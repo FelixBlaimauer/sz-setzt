@@ -153,7 +153,7 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
                                     </li>
                                 ))
                             ) : (
-                                <div className="flex items-center gap-1 rounded-lg bg-slate-50/40 p-4 text-slate-500">
+                                <div className="flex items-center gap-1 rounded-lg bg-navy-400/5 p-4 text-slate-600">
                                     <CircleSlash className="size-4" />
                                     <p>Noch keine Tore</p>
                                 </div>
@@ -222,7 +222,7 @@ export default function Details({ auth, game }: PageProps<{ game: Game }>) {
                                         clearErrors('amount');
                                     }}
                                     value={data.amount}
-                                    className="mt-1 grow"
+                                    className="mt-1 w-1 grow"
                                     placeholder="Wett Einsatz"
                                 />
 

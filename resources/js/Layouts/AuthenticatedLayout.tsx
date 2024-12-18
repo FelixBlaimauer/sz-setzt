@@ -38,9 +38,9 @@ export default function Authenticated({
     const user = usePage().props.auth.user satisfies User | null;
 
     const navRoutes: NavRoute[] = [
-        { title: 'Dashboard', name: 'dashboard' },
-        { title: 'Games', name: 'games.index' },
-        { title: 'Groups', name: 'groups.index' },
+        // { title: 'Dashboard', name: 'dashboard' },
+        { title: 'Spiele', name: 'games.index' },
+        { title: 'Standings', name: 'groups.index' },
     ];
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =

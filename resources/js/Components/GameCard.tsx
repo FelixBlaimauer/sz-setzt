@@ -4,12 +4,21 @@ import { Link, usePage } from '@inertiajs/react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 
+export enum TournamentStage {
+    GROUP_STAGE = 'GROUP_STAGE',
+    QUARTER_FINAL = 'QUARTER_FINAL',
+    SEMI_FINAL = 'SEMI_FINAL',
+    GRAND_FINAL = 'GRAND_FINAL',
+    LOOSERS_FINAL = 'LOOSERS_FINAL',
+}
+
 export interface Game {
     name: string;
     id: string;
     played_at: string;
     duration: number;
     group: string;
+    stage: TournamentStage;
     teams: Team[];
 }
 

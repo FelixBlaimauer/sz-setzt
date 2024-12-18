@@ -21,7 +21,7 @@ class GameFactory extends Factory
             'name' => $this->faker->company(),
             'played_at' => $this->faker->dateTimeBetween('-2 days', '+2 days'),
             'duration' => 15,
-            'group_id' => 1,
+            'group_id' => null,
             'stage' => TournamentStage::GROUP_STAGE,
         ];
     }
