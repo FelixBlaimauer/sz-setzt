@@ -86,30 +86,31 @@ export default function GroupsPage({
                         ref={bracketContainer}
                         className="mx-auto mt-2 h-[720px]"
                     >
-                        <SingleEliminationBracket
-                            matchComponent={Match}
-                            matches={matches}
-                            options={{
-                                style: {
-                                    roundHeader: {
-                                        isShown: false,
-                                        fontColor: '#111',
-                                        fontFamily: 'Kanit',
-                                    },
-                                    connectorColor: '#D7D7DC',
-                                    connectorColorHighlight: '#34343C',
-                                },
-                            }}
-                            svgWrapper={({ children, ...props }) => (
-                                <SVGViewer
-                                    width={width}
-                                    height={height}
-                                    {...props}
-                                >
-                                    {children}
-                                </SVGViewer>
-                            )}
-                        />
+                        <p>To be decided...</p>
+                        {/*<SingleEliminationBracket*/}
+                        {/*    matchComponent={Match}*/}
+                        {/*    matches={matches}*/}
+                        {/*    options={{*/}
+                        {/*        style: {*/}
+                        {/*            roundHeader: {*/}
+                        {/*                isShown: false,*/}
+                        {/*                fontColor: '#111',*/}
+                        {/*                fontFamily: 'Kanit',*/}
+                        {/*            },*/}
+                        {/*            connectorColor: '#D7D7DC',*/}
+                        {/*            connectorColorHighlight: '#34343C',*/}
+                        {/*        },*/}
+                        {/*    }}*/}
+                        {/*    svgWrapper={({ children, ...props }) => (*/}
+                        {/*        <SVGViewer*/}
+                        {/*            width={width}*/}
+                        {/*            height={height}*/}
+                        {/*            {...props}*/}
+                        {/*        >*/}
+                        {/*            {children}*/}
+                        {/*        </SVGViewer>*/}
+                        {/*    )}*/}
+                        {/*/>*/}
                     </div>
                 </div>
             </div>

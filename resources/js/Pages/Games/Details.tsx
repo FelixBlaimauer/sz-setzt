@@ -32,7 +32,6 @@ export default function Details({
     bets,
 }: PageProps<{ game: Game; bets: Bet[] }>) {
     const [selectedTeam, setSelectedTeam] = useState<Team>();
-    const [now] = useState(dayjs());
     const [isLive] = useState(!!game.started_at && !game.ended_at);
 
     const {
@@ -77,7 +76,7 @@ export default function Details({
                 />
             </div>
 
-            {game.ended_at && (
+            {game.started_at && (
                 <div className="mx-4 mt-4 rounded-lg bg-white p-4 shadow">
                     <h2 className="mb-2 text-center text-2xl font-semibold">
                         Tore

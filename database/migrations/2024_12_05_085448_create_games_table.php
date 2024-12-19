@@ -16,7 +16,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('name');
             $table->integer('duration'); // in minutes (e.g. 90 for 1.5 hours
-            $table->foreignId('group_id')->nullable()->constrained('groups')->cascadeOnDelete();
+            $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();
             $table->enum('stage', array_column(TournamentStage::cases(), 'name'));
             $table->dateTime('planned_at');
             $table->dateTime('started_at')->nullable();

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\TournamentStage;
+use App\Enums\TransactionType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -64,7 +66,7 @@ class Game extends Model
                 if ($this->teams->count() !== 2) {
                     return null;
                 }
-                if ($this->ends_at === null) {
+                if ($this->ended_at === null) {
                     return null;
                 }
 
@@ -100,6 +102,37 @@ class Game extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
+    }
+
+    public function distributeBets(): void
+    {
+        $bets = $this->gameBets;
+        $winner = $this->winner;
+
+        error_log('winner' . json_encode($winner));
+
+        if ($winner === 'TIE') {
+            $bets->each(function(GameBet $gameBet) {
+                $bet = $gameBet->bet;
+                $refund = new Transaction([
+                    'user_id' => $bet->user->id,
+                    'amount' => $bet->amount,
+                    'type' => TransactionType::EARN,
+                ]);
+                $refund->save();
+            });
+        } else if ($winner !== null) {
+            $multiplier = $this->getTeamOdds($winner);
+            $bets->where('team_id', $winner->id)->each(function(GameBet $gameBet) use ($multiplier) {
+                $bet = $gameBet->bet;
+                $earn = new Transaction([
+                    'user_id' => $bet->user->id,
+                    'amount' => $bet->amount * $multiplier,
+                    'type' => TransactionType::EARN,
+                ]);
+                $earn->save();
+            });
+        }
     }
 
     public function serializeGame(): array

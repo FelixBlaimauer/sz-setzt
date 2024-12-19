@@ -2,6 +2,7 @@ export enum TransactionType {
     DEPOSIT = 'DEPOSIT',
     WITHDRAW = 'WITHDRAW',
     SPEND = 'SPEND',
+    EARN = 'EARN',
 }
 
 export interface Transaction {

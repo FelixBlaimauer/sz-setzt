@@ -87,9 +87,14 @@ class GameController extends Controller
             abort(403);
         }
 
-        $game->update([
-            'ended_at' => Carbon::parse($request->input('ended_at')),
-        ]);
+        $ended_at = Carbon::parse($request->input('ended_at'));
+
+        $game->ended_at = $ended_at;
+        $game->save();
+
+        if (now()->gte($ended_at)) {
+            $game->distributeBets();
+        }
 
         return back();
     }
@@ -101,12 +106,8 @@ class GameController extends Controller
 
             return Inertia::render('Games/Details', [
                 'game' => fn() => $game->serializeGame(),
-                'bets' => fn() => $bets
-                    ->load('bettable')
-                    ->filter(fn(Bet $bet) => $bet->bettable->game_id === $game->id
-                    )->values(),
-                'gg' => function () use ($game, $bets) {
-                    return $bets->load('bettable')->where('bettable.game_id', $game->id)->count();
+                'bets' => function () use ($game, $bets) {
+                    return $bets->load('bettable')->where('bettable.game_id', $game->id)->values();
                 }
             ]);
         }

@@ -110,14 +110,14 @@ export default function GameAdminScreen({
         if (!startedAt) return;
 
         setStartData('started_at', dayjs(startedAt).toISOString());
-        end(route('games.end', game.id));
+        start(route('games.start', game.id));
     };
 
     const handleEnd = () => {
         if (!endedAt) return;
 
         setEndData('ended_at', dayjs(endedAt).toISOString());
-        start(route('games.end', game.id));
+        end(route('games.end', game.id));
     };
 
     return (

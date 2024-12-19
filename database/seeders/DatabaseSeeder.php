@@ -20,10 +20,10 @@ class DatabaseSeeder extends Seeder
             GroupSeeder::class,
             TeamSeeder::class,
 //            PlayerSeeder::class,
-            GameSeeder::class,
-            GoalSeeder::class,
-            TransactionSeeder::class,
-            BetSeeder::class,
+//            GameSeeder::class,
+//            GoalSeeder::class,
+//            TransactionSeeder::class,
+//            BetSeeder::class,
         ]);
     }
 }
