@@ -124,13 +124,20 @@ class Game extends Model
         } else if ($winner !== null) {
             $multiplier = $this->getTeamOdds($winner);
             $bets->where('team_id', $winner->id)->each(function(GameBet $gameBet) use ($multiplier) {
-                $bet = $gameBet->bet;
-                $earn = new Transaction([
-                    'user_id' => $bet->user->id,
-                    'amount' => $bet->amount * $multiplier,
-                    'type' => TransactionType::EARN,
-                ]);
-                $earn->save();
+                if ($gameBet->bet->paid_at === null) {
+                    \DB::transaction(function () use ($multiplier, $gameBet) {
+                        $bet = $gameBet->bet;
+                        $earn = new Transaction([
+                            'user_id' => $bet->user->id,
+                            'amount' => round($bet->amount * $multiplier),
+                            'type' => TransactionType::EARN,
+                        ]);
+                        $earn->save();
+
+                        $bet->paid_at = Carbon::now();
+                        $bet->save();
+                    });
+                }
             });
         }
     }

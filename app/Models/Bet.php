@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BetType;
+use Carbon\Carbon;
 use Database\Factories\BetFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,8 @@ class Bet extends Model
         'user_id',
         'amount',
         'type',
-        'transaction_id'
+        'transaction_id',
+        'paid_at'
     ];
 
     protected $casts = [
