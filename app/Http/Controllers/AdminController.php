@@ -44,4 +44,11 @@ class AdminController extends Controller
             'game' => $game->serializeForAdmin(),
         ]);
     }
+
+    public function users(Request $request)
+    {
+        return Inertia::render('Admin/Users', [
+           'users' => fn() => User::all(),
+        ]);
+    }
 }

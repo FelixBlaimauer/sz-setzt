@@ -2,6 +2,6 @@ import { Player } from '@/lib/types/Player';
 
 export interface Goal {
     id: string;
-    player: Player;
+    player?: Player;
     minute: number;
 }

@@ -9,8 +9,7 @@ import { Team } from '@/lib/types/Team';
 import { cn, formatOdds } from '@/lib/utils';
 import { PageProps } from '@/types';
 import { Radio, RadioGroup } from '@headlessui/react';
-import { Head, router, useForm } from '@inertiajs/react';
-import dayjs from 'dayjs';
+import { Head, useForm } from '@inertiajs/react';
 import {
     CandyCane,
     Circle,
@@ -18,7 +17,7 @@ import {
     CircleSlash,
     Coins,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface PlaceBetFormData {
     amount: number;
@@ -101,18 +100,18 @@ export default function Details({
                                                 <CandyCane className="size-6 text-rose-400" />
                                                 <div className="leading-4 text-slate-800">
                                                     <p className="font-semibold text-slate-900">
-                                                        {goal.player.name}
+                                                        {goal.player?.name ??
+                                                            'Unbekannt'}
                                                     </p>
                                                     <p>
-                                                        {
-                                                            goal.player
-                                                                .shirt_number
-                                                        }
+                                                        {goal.player
+                                                            ?.shirt_number ??
+                                                            '?'}
                                                     </p>
                                                 </div>
                                             </div>
                                             <p className="text-lg">
-                                                {goal.minute}'
+                                                {goal.minute.toFixed(0)}'
                                             </p>
                                         </li>
                                     ))
@@ -143,18 +142,18 @@ export default function Details({
                                                 <CandyCane className="size-6 text-rose-400" />
                                                 <div className="text-right leading-4 text-slate-800">
                                                     <p className="font-semibold text-slate-900">
-                                                        {goal.player.name}
+                                                        {goal.player?.name ??
+                                                            'Unbekannt'}
                                                     </p>
                                                     <p>
-                                                        {
-                                                            goal.player
-                                                                .shirt_number
-                                                        }
+                                                        {goal.player
+                                                            ?.shirt_number ??
+                                                            '?'}
                                                     </p>
                                                 </div>
                                             </div>
                                             <p className="text-lg">
-                                                {goal.minute}'
+                                                {goal.minute.toFixed(0)}'
                                             </p>
                                         </li>
                                     ))
@@ -252,6 +251,8 @@ export default function Details({
                                         value={data.amount}
                                         className="mt-1 w-1 grow"
                                         placeholder="Wett Einsatz"
+                                        type="number"
+                                        min={0}
                                     />
 
                                     <p>Coins</p>
@@ -282,7 +283,7 @@ export default function Details({
                             <PrimaryButton
                                 disabled={
                                     !selectedTeam ||
-                                    data.amount <= 0 ||
+                                    data.amount < 1 ||
                                     processing
                                 }
                                 className="flex w-full justify-center"

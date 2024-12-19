@@ -6,6 +6,7 @@ export interface User {
     email: string;
     email_verified_at?: string;
     balance: number;
+    created_at?: string;
 }
 
 export type PageProps<

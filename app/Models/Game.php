@@ -155,7 +155,7 @@ class Game extends Model
 //                    'odds' => rand(11, 20) / 10,
                     'odds' => $this->getTeamOdds($team),
 //                    'otto' => $game->gameBets->where('team_id', $team->id)->map(fn($t) => $t->bet)->sum('amount'),
-                    'goals' => $goals->map(fn(Goal $goal) => [
+                    'goals' => $goals->sortBy('minute')->values()->map(fn(Goal $goal) => [
                             'id' => $goal->id,
                             'player' => $goal->player,
                             'minute' => $goal->minute,

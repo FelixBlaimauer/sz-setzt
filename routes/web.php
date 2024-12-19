@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->can('create', Team::class)->name('admin.index');
     Route::get('/admin/deposit/{user}', [AdminController::class, 'deposit'])->can('create', Transaction::class)->name('admin.deposit');
     Route::get('/admin/game/{game}', [AdminController::class, 'game'])->can('create', Transaction::class)->name('admin.game');
+    Route::get('/admin/users', [AdminController::class, 'users'])->can('create', Transaction::class)->name('admin.users');
 
     Route::post('/teams', [TeamController::class, 'store'])->can('create', Team::class)->name('teams.store');
     Route::delete('/teams/{team}', [TeamController::class, 'destroy'])->can('delete', Team::class)->name('teams.destroy');

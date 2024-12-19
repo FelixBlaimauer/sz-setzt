@@ -14,6 +14,8 @@ import {
     PiggyBank,
     RefreshCw,
     Shield,
+    User,
+    Users,
 } from 'lucide-react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
@@ -89,6 +91,16 @@ export default function Authenticated({
                                         >
                                             <Shield className="h-4 w-4" />
                                             Admin
+                                        </NavLink>
+                                        <NavLink
+                                            href={route('admin.users')}
+                                            active={route().current(
+                                                'admin.users',
+                                            )}
+                                            className="items-center gap-1"
+                                        >
+                                            <Users className="h-4 w-4" />
+                                            Users
                                         </NavLink>
                                     </>
                                 )}
@@ -256,14 +268,24 @@ export default function Authenticated({
                             </ResponsiveNavLink>
                         ))}
                         {user?.roles.includes('admin') && (
-                            <ResponsiveNavLink
-                                href={route('admin.index')}
-                                active={route().current('admin.index')}
-                                className="flex items-center gap-2"
-                            >
-                                <Shield className="h-4 w-4" />
-                                Admin
-                            </ResponsiveNavLink>
+                            <>
+                                <ResponsiveNavLink
+                                    href={route('admin.index')}
+                                    active={route().current('admin.index')}
+                                    className="flex items-center gap-2"
+                                >
+                                    <Shield className="h-4 w-4" />
+                                    Admin
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    href={route('admin.users')}
+                                    active={route().current('admin.users')}
+                                    className="flex items-center gap-2"
+                                >
+                                    <Users className="size-4" />
+                                    Users
+                                </ResponsiveNavLink>
+                            </>
                         )}
                     </div>
 

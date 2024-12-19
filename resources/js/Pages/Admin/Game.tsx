@@ -8,7 +8,7 @@ import { Player } from '@/lib/types/Player';
 import { Team } from '@/lib/types/Team';
 import { PageProps } from '@/types';
 import { Select } from '@headlessui/react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
@@ -59,6 +59,7 @@ const GoalForm = ({ game, team }: { game: Game; team: AdminTeam }) => {
                     value={data.player_id}
                     onChange={(e) => setData('player_id', e.target.value)}
                 >
+                    <option value="">Unknown</option>
                     {team.players.map((player) => (
                         <option key={player.id} value={player.id}>
                             {player.shirt_number} | {player.name}
@@ -70,6 +71,7 @@ const GoalForm = ({ game, team }: { game: Game; team: AdminTeam }) => {
                     type="number"
                     min={0}
                     value={data.minute}
+                    onChange={(e) => setData('minute', e.target.value)}
                 />
 
                 <SecondaryButton className="ms-2" type="submit">
@@ -94,30 +96,19 @@ export default function GameAdminScreen({
         game.ended_at ? new Date(game.ended_at) : undefined,
     );
 
-    const {
-        data: startData,
-        setData: setStartData,
-        put: start,
-    } = useForm<{ started_at: string }>();
-
-    const {
-        data: endData,
-        setData: setEndData,
-        put: end,
-    } = useForm<{ ended_at: string }>();
-
     const handleStart = () => {
         if (!startedAt) return;
-
-        setStartData('started_at', dayjs(startedAt).toISOString());
-        start(route('games.start', game.id));
+        router.put(route('games.start', game.id), {
+            started_at: dayjs(startedAt).toISOString(),
+        });
     };
 
     const handleEnd = () => {
         if (!endedAt) return;
 
-        setEndData('ended_at', dayjs(endedAt).toISOString());
-        end(route('games.end', game.id));
+        router.put(route('games.end', game.id), {
+            ended_at: dayjs(startedAt).toISOString(),
+        });
     };
 
     return (

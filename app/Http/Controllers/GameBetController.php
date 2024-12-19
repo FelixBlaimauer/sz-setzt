@@ -53,7 +53,7 @@ class GameBetController extends Controller
             return back()->withErrors(['game' => 'Game has already started!']);
         }
 
-        if ($amount < 0) {
+        if ($amount < 1) {
             return back()->withErrors(['amount' => 'Cannot bet negative amount!']);
         }
 
