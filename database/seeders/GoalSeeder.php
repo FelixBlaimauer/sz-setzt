@@ -17,7 +17,7 @@ class GoalSeeder extends Seeder
         $games = Game::all();
 
         $games->each(function (Game $game) {
-            if (now()->isBefore($game->played_at)) return;
+            if (now()->isBefore($game->planned_at)) return;
 
             $goalsA = rand(0, 5);
             $goalsB = rand(0, 5);

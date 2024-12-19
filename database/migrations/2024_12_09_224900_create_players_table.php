@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('players', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name');
-            $table->unsignedInteger('shirt_number');
+            $table->string('shirt_number');
             $table->foreignUlid('team_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

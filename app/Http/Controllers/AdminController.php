@@ -19,7 +19,7 @@ class AdminController extends Controller
 
         return Inertia::render('Admin/Index', [
             'teams' => fn () => Team::with('players')->get(),
-            'games' => fn () => Game::with('goals')->get(),
+            'games' => fn () => Game::with(['goals'])->get(),
         ]);
     }
 
@@ -31,6 +31,17 @@ class AdminController extends Controller
 
         return Inertia::render('Admin/Deposit', [
             'user' => $user,
+        ]);
+    }
+
+    public function game(Request $request, Game $game): Response
+    {
+        if ($request->user()->cannot('create', Team::class)) {
+            abort(403);
+        }
+
+        return Inertia::render('Admin/Game', [
+            'game' => $game->serializeForAdmin(),
         ]);
     }
 }

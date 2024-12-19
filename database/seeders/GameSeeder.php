@@ -52,6 +52,7 @@ class GameSeeder extends Seeder
             'stage' => TournamentStage::LOOSERS_FINAL,
         ])->each(fn(Game $game) => $game->teams()->attach($teams->random(2)));
 
-        $games->random()->update(['played_at' => now()]);
+        $live = $games->random();
+        $live->update(['planned_at' => now(),'started_at' => now()]);
     }
 }

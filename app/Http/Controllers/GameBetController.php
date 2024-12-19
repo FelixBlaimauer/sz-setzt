@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\BetType;
 use App\Enums\TransactionType;
+use App\Models\Game;
 use App\Models\GameBet;
 use App\Models\Transaction;
 use Auth;
@@ -42,8 +43,14 @@ class GameBetController extends Controller
         $team_id = $request->input('team');
         $game_id = $request->input('game');
 
-        if ($user->bets->load('bettable')->where('bettable.game_id', $game_id)->count() > 0) {
+        $bets = $user->bets->where('type', BetType::GAME_BET)->load('bettable');
+
+        if ($bets->where('bettable.game_id', $game_id)->count() > 0) {
             return back()->withErrors(['game' => 'You have already placed a bet on this game!']);
+        }
+
+        if (Game::find($game_id)->started_at !== null) {
+            return back()->withErrors(['game' => 'Game has already started!']);
         }
 
         if ($amount < 0) {

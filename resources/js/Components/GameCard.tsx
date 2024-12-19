@@ -15,7 +15,9 @@ export enum TournamentStage {
 export interface Game {
     name: string;
     id: string;
-    played_at: string;
+    planned_at: string;
+    started_at?: string;
+    ended_at?: string;
     duration: number;
     group: string;
     stage: TournamentStage;
@@ -146,7 +148,7 @@ export default function GameCard({
                             <p className="-mt-1 text-xl font-medium text-slate-700">
                                 {dayjs
                                     .duration(game.duration, 'minutes')
-                                    .subtract(now.diff(dayjs(game.played_at)))
+                                    .subtract(now.diff(dayjs(game.started_at)))
                                     .format('mm:ss')}
                             </p>
                         )}
@@ -168,7 +170,10 @@ export default function GameCard({
                     )}
                 >
                     <p className="ml-2 text-lg text-slate-600">
-                        {dayjs(game.played_at).format('DD.MM - HH:mm')} Uhr
+                        {dayjs(game.started_at ?? game.planned_at).format(
+                            'DD.MM - HH:mm',
+                        )}{' '}
+                        Uhr
                     </p>
                     {showDetails && (
                         <Link

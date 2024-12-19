@@ -21,24 +21,27 @@ export default function Home({ auth, games }: PageProps<{ games: Game[] }>) {
         const finishedGames: Game[] = [];
 
         games.forEach((game) => {
-            const playedAt = dayjs(game.played_at);
-            const endsAt = playedAt.add(game.duration, 'minutes');
-
-            if (now.isAfter(endsAt)) {
+            if (game.ended_at) {
                 finishedGames.push(game);
-            } else if (now.isBefore(playedAt)) {
+            } else if (!game.started_at) {
                 upcomingGames.push(game);
             } else {
                 liveGames.push(game);
             }
         });
 
-        liveGames.sort((a, b) => dayjs(a.played_at).diff(dayjs(b.played_at)));
+        liveGames.sort((a, b) =>
+            dayjs(a.started_at ?? a.planned_at).diff(
+                dayjs(b.started_at ?? b.planned_at),
+            ),
+        );
         upcomingGames.sort((a, b) =>
-            dayjs(a.played_at).diff(dayjs(b.played_at)),
+            dayjs(a.planned_at).diff(dayjs(b.planned_at)),
         );
         finishedGames.sort((a, b) =>
-            dayjs(b.played_at).diff(dayjs(a.played_at)),
+            dayjs(b.started_at ?? b.planned_at).diff(
+                dayjs(a.started_at ?? a.planned_at),
+            ),
         );
 
         setLiveGames(liveGames);

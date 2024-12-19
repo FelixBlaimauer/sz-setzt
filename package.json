@@ -46,6 +46,7 @@
         "dayjs": "^1.11.13",
         "lucide-react": "^0.465.0",
         "qrcode.react": "^4.1.0",
+        "react-datetime": "^3.3.1",
         "tailwind-merge": "^2.5.5",
         "tailwindcss-animate": "^1.0.7"
     }

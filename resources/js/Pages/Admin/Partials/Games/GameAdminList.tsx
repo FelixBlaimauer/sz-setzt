@@ -16,7 +16,7 @@ interface GameAdminListProps {
     games: AdminGame[];
 }
 
-export default function TeamAdminList({ games }: GameAdminListProps) {
+export default function GameAdminList({ games }: GameAdminListProps) {
     const [handlingGameCreation, setHandlingGameCreation] = useState(false);
     const gameNameInput = useRef<HTMLInputElement | null>(null);
 

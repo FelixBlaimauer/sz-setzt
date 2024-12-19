@@ -33,10 +33,7 @@ export default function Details({
 }: PageProps<{ game: Game; bets: Bet[] }>) {
     const [selectedTeam, setSelectedTeam] = useState<Team>();
     const [now] = useState(dayjs());
-    const [isLive] = useState(
-        now.isAfter(dayjs(game.played_at)) &&
-            now.isBefore(dayjs(game.played_at).add(game.duration, 'minutes')),
-    );
+    const [isLive] = useState(!!game.started_at && !game.ended_at);
 
     const {
         data,
@@ -73,14 +70,14 @@ export default function Details({
             <div className="mt-4">
                 <GameCard
                     game={game}
-                    showScore={now.isAfter(dayjs(game.played_at))}
+                    showScore={!!game.started_at}
                     isLive={isLive}
                     showDetails={false}
-                    onTimeChange={() => router.reload({ only: ['game'] })}
+                    // onTimeChange={() => router.reload({ only: ['game'] })}
                 />
             </div>
 
-            {now.isAfter(dayjs(game.played_at)) && (
+            {game.ended_at && (
                 <div className="mx-4 mt-4 rounded-lg bg-white p-4 shadow">
                     <h2 className="mb-2 text-center text-2xl font-semibold">
                         Tore
@@ -174,13 +171,13 @@ export default function Details({
                 </div>
             )}
 
-            {auth.user && (
+            {auth.user && (!game.started_at || bets?.length > 0) && (
                 <div className="mx-4 mb-12 mt-4 rounded-lg bg-white p-4 shadow">
                     <h2 className="mb-2 text-center text-2xl font-semibold">
                         Wette plazieren
                     </h2>
 
-                    {bets?.length > 0 ? (
+                    {bets?.length > 0 && (
                         <div className="flex flex-col items-center gap-4 px-4 py-2 text-slate-600 sm:flex-row">
                             <CircleCheck className="size-8 text-greenquoise-400" />
                             <div className="leading-5">
@@ -196,7 +193,8 @@ export default function Details({
                                 </div>
                             </div>
                         </div>
-                    ) : (
+                    )}
+                    {!game.started_at && bets?.length < 1 && (
                         <form className="space-y-2" onSubmit={createBet}>
                             <RadioGroup
                                 by="name"

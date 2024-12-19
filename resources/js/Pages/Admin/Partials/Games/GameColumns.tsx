@@ -1,14 +1,15 @@
-import { AdminGame } from '@/lib/types/AdminGame';
-import type { ColumnDef } from '@tanstack/react-table';
 import {
     DropdownMenu,
-    DropdownMenuContent, DropdownMenuItem,
+    DropdownMenuContent,
+    DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu';
+import { AdminGame } from '@/lib/types/AdminGame';
 import { Button } from '@headlessui/react';
+import type { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { router } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 
 interface GameColumnsProps {
     onEdit?: (game: AdminGame) => void;
@@ -20,8 +21,19 @@ export const getGameColumns = ({
     onDelete,
 }: GameColumnsProps): ColumnDef<AdminGame>[] => [
     {
-        accessorKey: 'id',
-        header: 'ID',
+        id: 'id',
+        cell: ({ row }) => {
+            const game = row.original;
+
+            return (
+                <Link
+                    href={route('admin.game', game.id)}
+                    className="text-blue-600 hover:underline"
+                >
+                    {game.id}
+                </Link>
+            );
+        },
     },
     {
         accessorKey: 'name',
@@ -57,6 +69,6 @@ export const getGameColumns = ({
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
-        }
-    }
+        },
+    },
 ];

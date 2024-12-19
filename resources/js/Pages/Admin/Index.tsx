@@ -23,10 +23,10 @@ export default function Index({
             <div className="py-12">
                 <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                     <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                        <TeamAdminList teams={teams} />
+                        <GameAdminList games={games} />
                     </div>
                     <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
-                        <GameAdminList games={games} />
+                        <TeamAdminList teams={teams} />
                     </div>
                 </div>
             </div>
