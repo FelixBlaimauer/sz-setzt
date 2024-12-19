@@ -6,6 +6,7 @@ use App\Models\Bet;
 use App\Models\Game;
 use App\Models\Goal;
 use App\Models\Team;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -19,7 +20,41 @@ class GameController extends Controller
             abort(403);
         }
 
+        \DB::transaction(function () use ($request) {
+            $game = Game::create($request->all());
+
+            $teamA = Team::find($request->team_a_id);
+            $teamB = Team::find($request->team_b_id);
+
+            $game->teams()->attach([$teamA, $teamB]);
+        });
+
         return Redirect::route('admin.index');
+    }
+
+    public function storeGoal(Request $request, Game $game)
+    {
+        if ($request->user()->cannot('create', Game::class)) {
+            abort(403);
+        }
+
+        if ($game->started_at === null) {
+            return back()->withErrors(['game_id' => 'Game has not started!']);
+        }
+
+        $player_id = $request->input('player_id');
+        $team_id = $request->input('team_id');
+        $min = $request->input('minute');
+
+        $minute = $min === null ? $game->started_at->diffInMinutes(now()) : (int) $min;
+
+        $goal = $game->goals()->create([
+            'player_id' => $player_id,
+            'team_id' => $team_id,
+            'minute' => $minute
+        ]);
+
+        return Redirect::route('admin.game', ['game' => $game->id]);
     }
 
     public function destroy(Request $request, Game $game): RedirectResponse
@@ -33,6 +68,32 @@ class GameController extends Controller
         return Redirect::route('admin.index');
     }
 
+    public function start(Request $request, Game $game)
+    {
+        if ($request->user()->cannot('create', Game::class)) {
+            abort(403);
+        }
+
+        $game->update([
+            'started_at' => Carbon::parse($request->input('started_at')),
+        ]);
+
+        return back();
+    }
+
+    public function end(Request $request, Game $game)
+    {
+        if ($request->user()->cannot('create', Game::class)) {
+            abort(403);
+        }
+
+        $game->update([
+            'ended_at' => Carbon::parse($request->input('ended_at')),
+        ]);
+
+        return back();
+    }
+
     public function show(Request $request, Game $game)
     {
         if (\Auth::check()) {
@@ -44,8 +105,8 @@ class GameController extends Controller
                     ->load('bettable')
                     ->filter(fn(Bet $bet) => $bet->bettable->game_id === $game->id
                     )->values(),
-                'gg' => function() use ($game, $bets) {
-                return $bets->load('bettable')->where('bettable.game_id', $game->id)->count();
+                'gg' => function () use ($game, $bets) {
+                    return $bets->load('bettable')->where('bettable.game_id', $game->id)->count();
                 }
             ]);
         }

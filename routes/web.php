@@ -10,6 +10,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TransactionController;
 use App\Models\Bet;
 use App\Models\Game;
+use App\Models\Goal;
 use App\Models\Team;
 use App\Models\Transaction;
 use Illuminate\Foundation\Application;
@@ -52,6 +53,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/games', [GameController::class, 'store'])->can('create', Game::class)->name('games.store');
     Route::delete('/games/{game}', [GameController::class, 'destroy'])->can('delete', Game::class)->name('games.destroy');
+    Route::put('/games/{game}/start', [GameController::class, 'start'])->can('create', Game::class)->name('games.start');
+    Route::put('/games/{game}/end', [GameController::class, 'end'])->can('create', Game::class)->name('games.end');
+
+    Route::post('/games/{game}/goal', [GameController::class, 'storeGoal'])->can('create', Game::class)->name('games.goals.store');
 
     Route::post('/transaction', [TransactionController::class, 'store'])->can('create', Transaction::class)->name('transaction.store');
 

@@ -2,6 +2,7 @@ import { Team } from '@/lib/types/Team';
 import { cn, formatOdds, OddFormat } from '@/lib/utils';
 import { Link, usePage } from '@inertiajs/react';
 import dayjs, { Dayjs } from 'dayjs';
+import { Shield } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export enum TournamentStage {
@@ -55,7 +56,7 @@ export default function GameCard({
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [isLive]);
+    }, [isLive, onTimeChange]);
 
     return (
         <div className="mx-4 overflow-hidden rounded-lg bg-white shadow-md">
@@ -63,6 +64,15 @@ export default function GameCard({
                 <p className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600">
                     {game.group}
                 </p>
+                {user?.roles.includes('admin') && (
+                    <Link
+                        href={route('admin.game', game.id)}
+                        className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1 rounded-lg bg-slate-700 p-1 text-sm text-slate-50"
+                    >
+                        <Shield className="size-4" />
+                        <span>Admin</span>
+                    </Link>
+                )}
                 <p className="font-medium">{game.name}</p>
             </div>
             <div

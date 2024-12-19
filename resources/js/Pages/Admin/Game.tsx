@@ -1,5 +1,6 @@
-import { Game } from '@/Components/GameCard';
-import InputLabel from '@/Components/InputLabel';
+import GameCard, { Game } from '@/Components/GameCard';
+import InputError from '@/Components/InputError';
+import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -7,10 +8,11 @@ import { Player } from '@/lib/types/Player';
 import { Team } from '@/lib/types/Team';
 import { PageProps } from '@/types';
 import { Select } from '@headlessui/react';
-import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, useForm } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
+import dayjs from 'dayjs';
 
 export interface AdminTeam extends Team {
     players: Player[];
@@ -20,18 +22,103 @@ export interface AdminGame extends Game {
     teams: AdminTeam[];
 }
 
+interface NewGoal {
+    team_id: string;
+    player_id: string;
+    minute?: number;
+    game_id: null;
+}
+
+const GoalForm = ({ game, team }: { game: Game; team: AdminTeam }) => {
+    const {
+        data,
+        setData,
+        post: create,
+        errors,
+    } = useForm<NewGoal>({
+        player_id: team.players[0].id,
+        team_id: team.id,
+        minute: undefined,
+        game_id: null,
+    });
+
+    const createGoal = (e) => {
+        e.preventDefault();
+
+        create(route('games.goals.store', game.id));
+    };
+
+    return (
+        <div>
+            <h4>
+                {team.name}: {team.goals?.length ?? 0}
+            </h4>
+
+            <form onSubmit={createGoal} className="mt-4">
+                <Select
+                    value={data.player_id}
+                    onChange={(e) => setData('player_id', e.target.value)}
+                >
+                    {team.players.map((player) => (
+                        <option key={player.id} value={player.id}>
+                            {player.shirt_number} | {player.name}
+                        </option>
+                    ))}
+                </Select>
+                <TextInput
+                    className="ms-2 w-24"
+                    type="number"
+                    min={0}
+                    value={data.minute}
+                />
+
+                <SecondaryButton className="ms-2" type="submit">
+                    Add Goal
+                </SecondaryButton>
+
+                <InputError message={errors.team_id} />
+                <InputError message={errors.player_id} />
+                <InputError message={errors.game_id} />
+            </form>
+        </div>
+    );
+};
+
 export default function GameAdminScreen({
     game,
 }: PageProps<{ game: AdminGame }>) {
-    const [plannedAt, setPlannedAt] = useState<Date | string>(
-        new Date(game.planned_at),
-    );
     const [startedAt, setStartedAt] = useState<Date | string | undefined>(
         game.started_at ? new Date(game.started_at) : undefined,
     );
     const [endedAt, setEndedAt] = useState<Date | string | undefined>(
         game.ended_at ? new Date(game.ended_at) : undefined,
     );
+
+    const {
+        data: startData,
+        setData: setStartData,
+        put: start,
+    } = useForm<{ started_at: string }>();
+
+    const {
+        data: endData,
+        setData: setEndData,
+        put: end,
+    } = useForm<{ ended_at: string }>();
+
+    const handleStart = () => {
+        if (!startedAt) return;
+
+        setStartData('started_at', dayjs(startedAt).toISOString());
+        end(route('games.end', game.id));
+    };
+
+    const handleEnd = () => {
+        if (!endedAt) return;
+
+        setEndData('ended_at', dayjs(endedAt).toISOString());
+        start(route('games.end', game.id));
+    };
 
     return (
         <AuthenticatedLayout
@@ -45,109 +132,72 @@ export default function GameAdminScreen({
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                    <GameCard
+                        game={game}
+                        showScore={true}
+                        showOdds={true}
+                        showDetails={true}
+                        oddFormat={'decimal'}
+                    />
+
+                    <div className="mx-4 bg-white p-4 shadow sm:rounded-lg sm:p-8">
                         <h2 className="mb-2 text-2xl font-medium">
-                            Game Details
+                            Game: {game.name}
                         </h2>
 
-                        <form className="space-y-2">
-                            <div>
-                                <InputLabel
-                                    htmlFor="game-name"
-                                    value="Game Name"
-                                />
-                                <TextInput
-                                    id="game-name"
-                                    name="game-name"
-                                    value={game.name}
-                                    placeholder="Game Name"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="planned_at"
-                                    value="Planned At"
-                                />
+                        <div className="flex flex-wrap">
+                            <div className="grow">
+                                <p className="text-xl font-medium">
+                                    Start Time
+                                </p>
                                 <div className="flex gap-2">
                                     <Datetime
-                                        value={plannedAt}
-                                        className="rounded-lg"
-                                    />
-                                    <SecondaryButton
-                                        onClick={() => setPlannedAt(new Date())}
-                                        type="button"
-                                    >
-                                        Now
-                                    </SecondaryButton>
-                                </div>
-                            </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="Started At"
-                                    value="Started At"
-                                />
-                                <div className="flex gap-2">
-                                    <Datetime
+                                        onChange={(v) => setStartedAt(v)}
                                         value={startedAt}
-                                        className="rounded-lg"
                                     />
                                     <SecondaryButton
-                                        type="button"
                                         onClick={() => setStartedAt(new Date())}
                                     >
                                         Now
                                     </SecondaryButton>
                                 </div>
+                                <PrimaryButton
+                                    onClick={handleStart}
+                                    className="mt-2"
+                                >
+                                    Save
+                                </PrimaryButton>
                             </div>
-                            <div>
-                                <InputLabel
-                                    htmlFor="Ended At"
-                                    value="Ended At"
-                                />
+                            <div className="grow">
+                                <p className="text-xl font-medium">End Time</p>
                                 <div className="flex gap-2">
                                     <Datetime
+                                        onChange={(v) => setEndedAt(v)}
                                         value={endedAt}
-                                        className="rounded-lg"
                                     />
                                     <SecondaryButton
-                                        type="button"
                                         onClick={() => setEndedAt(new Date())}
                                     >
                                         Now
                                     </SecondaryButton>
                                 </div>
+                                <PrimaryButton onClick={handleEnd} className="mt-2">
+                                    Save
+                                </PrimaryButton>
                             </div>
+                        </div>
 
-                            <h3 className="text-xl">Goals</h3>
+                        <h4 className="mt-4 text-lg font-medium">Goals</h4>
+
+                        <div className="space-y-2">
                             {game.teams.map((team) => (
-                                <div key={team.id}>
-                                    <h4>{team.name}</h4>
-                                    {team.goals?.map((goal) => (
-                                        <div
-                                            key={goal.id}
-                                            className="flex gap-2"
-                                        >
-                                            <input
-                                                min={0}
-                                                type="number"
-                                                value={goal.minute}
-                                                className="w-24 rounded-lg"
-                                            />
-                                            <Select>
-                                                {team.players.map((player) => (
-                                                    <option
-                                                        key={player.id}
-                                                        value={player.id}
-                                                    >
-                                                        {player.name}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                        </div>
-                                    ))}
-                                </div>
+                                <GoalForm
+                                    game={game}
+                                    key={team.id}
+                                    team={team}
+                                />
                             ))}
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>

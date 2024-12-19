@@ -14,8 +14,9 @@ class TeamSeeder extends Seeder
      */
     public function run(): void
     {
-        Group::all()->each(
-            fn(Group $group) => Team::factory(4)->create(['group_id' => $group->id])
-        );
+        \Artisan::call('import:teams-and-players', ['spreadsheetId' => '1DmM809apedrldqUK3xbhnD_D9Zup-q17BP6KqhdHmCs']);
+//        Group::all()->each(
+//            fn(Group $group) => Team::factory(4)->create(['group_id' => $group->id])
+//        );
     }
 }

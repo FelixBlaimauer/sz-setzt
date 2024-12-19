@@ -90,7 +90,7 @@ class Game extends Model
         $mySum = $bets->where('team_id', $team->id)->map(fn($bet) => $bet->bet)->sum('amount');
         $otherSum = $bets->where('team_id', '!=', $team->id)->map(fn($bet) => $bet->bet)->sum('amount');
 
-        if ($mySum + $otherSum === 0) {
+        if ($mySum === 0 || $otherSum === 0) {
             return 1;
         }
 

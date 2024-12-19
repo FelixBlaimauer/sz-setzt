@@ -65,7 +65,7 @@ class LoadTeams extends Command
             foreach ($teams as $team) {
                 $teamModel = new Team([
                     "name" => $team["name"],
-                    "group_id" => $groupMap->get($team["group"], 3) // TODO: remove default value 3 when group_id is nullable
+                    "group_id" => $groupMap->get($team["group"])
                 ]);
                 $teamModel->save();
                 $teamModels[$team["name"]] = $teamModel->id;
