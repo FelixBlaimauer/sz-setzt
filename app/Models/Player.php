@@ -14,7 +14,7 @@ class Player extends Model
     /** @use HasFactory<\Database\Factories\PlayerFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'shirt_number'];
+    protected $fillable = ['name', 'shirt_number', 'team_id'];
 
     public function team(): BelongsTo
     {
