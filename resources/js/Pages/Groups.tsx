@@ -1,10 +1,9 @@
 import { DataTable } from '@/Components/DataTable';
-import { Game } from '@/Components/GameCard';
 import Match from '@/Components/Match';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Group, GroupTeam } from '@/lib/types/Group';
-import { groupColumns } from '@/Pages/Profile/Partials/GroupColumns';
+import { advGroupColumns, groupColumns } from '@/Pages/Profile/Partials/GroupColumns';
 import { PageProps } from '@/types';
 import {
     MatchType,
@@ -18,17 +17,21 @@ import { useRef } from 'react';
 interface GroupsPageProps {
     matches: MatchType[];
     groups: Group[];
+    adv_groups: Group[];
 }
 
 export default function GroupsPage({
     groups,
     matches,
+    adv_groups,
     auth,
 }: PageProps<GroupsPageProps>) {
     const bracketContainer = useRef(null);
     const [width, height] = useSize(bracketContainer);
 
-    console.log('matches', matches);
+    // console.log('matches', matches);
+    // console.log('groups', groups);
+    // console.log('g', adv_groups);
 
     return (
         <AuthenticatedLayout
@@ -43,6 +46,44 @@ export default function GroupsPage({
             <div className="mx-auto mt-4 max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
                     <h2 className="text-2xl font-semibold text-slate-950">
+                        Freitag Gruppen
+                    </h2>
+
+                    <Tabs
+                        defaultValue={adv_groups[0].id.toString()}
+                        className="mt-2"
+                    >
+                        <span className="me-2">Gruppe: </span>
+                        <TabsList>
+                            {adv_groups.map((group) => (
+                                <TabsTrigger
+                                    key={group.id}
+                                    value={group.id.toString()}
+                                >
+                                    {group.name}
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                        {adv_groups.map((group) => (
+                            <TabsContent
+                                key={group.id}
+                                value={group.id.toString()}
+                            >
+                                <DataTable<GroupTeam>
+                                    columns={advGroupColumns}
+                                    data={group.advanced}
+                                    defaultSorting={[
+                                        { id: 'rank', desc: false },
+                                    ]}
+                                    striped
+                                />
+                            </TabsContent>
+                        ))}
+                    </Tabs>
+                </div>
+
+                <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                    <h2 className="text-2xl font-semibold text-slate-950">
                         Gruppenphase
                     </h2>
 
@@ -52,14 +93,17 @@ export default function GroupsPage({
                     >
                         <span className="me-2">Gruppe: </span>
                         <TabsList>
-                            {groups.map((group) => (
-                                <TabsTrigger
-                                    key={group.id}
-                                    value={group.id.toString()}
-                                >
-                                    {group.name}
-                                </TabsTrigger>
-                            ))}
+                            {groups.map(
+                                (group) =>
+                                    group.teams.length > 0 && (
+                                        <TabsTrigger
+                                            key={group.id}
+                                            value={group.id.toString()}
+                                        >
+                                            {group.name}
+                                        </TabsTrigger>
+                                    ),
+                            )}
                         </TabsList>
                         {groups.map((group) => (
                             <TabsContent

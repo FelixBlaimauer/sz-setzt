@@ -22,8 +22,13 @@ class Group extends Model
         return $this->hasMany(Team::class);
     }
 
+    public function advanced(): HasMany
+    {
+        return $this->hasMany(Team::class, 'adv_group_id');
+    }
+
     public function games(): HasMany
     {
-        return $this->hasMany(Game::class);
+        return $this->hasMany(Game::class, 'group_id');
     }
 }

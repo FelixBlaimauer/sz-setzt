@@ -21,7 +21,8 @@ class Team extends Model
 
     protected $fillable = [
         'name',
-        'group_id'
+        'group_id',
+        'adv_group_id'
     ];
 
     public function goals(): HasMany
@@ -40,6 +41,11 @@ class Team extends Model
     }
 
     public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
+    }
+
+    public function advGroup(): BelongsTo
     {
         return $this->belongsTo(Group::class);
     }
@@ -93,6 +99,38 @@ class Team extends Model
 
 
                 $this->games->where('group_id', $this->group_id)->each(function (Game $game) use (&$points, &$goalsScored, &$goalsReceived) {
+                    if ($game->winner === null) {
+                        return;
+                    }
+                    if ($game->winner === 'TIE') {
+                        $points++;
+                    } else if ($game->winner->id === $this->id) {
+                        $points += 3;
+                    }
+
+                    $goalsScored += $game->goals->where('team_id', $this->id)->count();
+                    $goalsReceived += $game->goals->where('team_id', '!=', $this->id)->count();
+                });
+
+                return [
+                    'points' => $points,
+                    'goalDifference' => $goalsScored - $goalsReceived,
+                    'goals' => $goalsScored,
+                ];
+            }
+        )->shouldCache();
+    }
+
+    protected function advGroupStats(): Attribute
+    {
+        return Attribute::make(
+            get: function() {
+                $points = 0;
+                $goalsScored = 0;
+                $goalsReceived = 0;
+
+
+                $this->games->where('group_id', $this->adv_group_id)->each(function (Game $game) use (&$points, &$goalsScored, &$goalsReceived) {
                     if ($game->winner === null) {
                         return;
                     }

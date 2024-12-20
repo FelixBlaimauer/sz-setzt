@@ -47,7 +47,7 @@ class GroupController extends Controller
 
                 return $mappedQuarters->concat($mappedSemis)->concat([$final]);
             },
-            'groups' => fn() => Group::all()->each(
+            'groups' => fn() => Group::all()->where('id', '<', 5)->values()->each(
                 fn(Group $group) => $group->teams->append('group_stats')->sortBy([
                     ['group_stats.points', 'desc'],
                     ['group_stats.goalDifference', 'desc'],
@@ -55,6 +55,17 @@ class GroupController extends Controller
                 ])->values()->map(
                     fn($team, $i) => $team->rank = $i + 1
                 )
+            ),
+            'adv_groups' => fn() => Group::all()->where('id', '>', 4)->values()->each(
+                function (Group $group) {
+                    return $group->advanced->append('adv_group_stats')->sortBy([
+                        ['adv_group_stats.points', 'desc'],
+                        ['adv_group_stats.goalDifference', 'desc'],
+                        ['adv_group_stats.goals', 'desc'],
+                    ])->values()->map(
+                        fn($team, $i) => $team->rank = $i + 1
+                    );
+                }
             ),
         ]);
     }

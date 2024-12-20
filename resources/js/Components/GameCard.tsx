@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 export enum TournamentStage {
     GROUP_STAGE = 'GROUP_STAGE',
+    GROUP_ADV = 'GROUP_ADV',
     QUARTER_FINAL = 'QUARTER_FINAL',
     SEMI_FINAL = 'SEMI_FINAL',
     GRAND_FINAL = 'GRAND_FINAL',
