@@ -87,7 +87,7 @@ export default function GameCard({
                 <div
                     className={cn(
                         'flex grow flex-col justify-between gap-8',
-                        showScore && 'gap-14',
+                        showScore && 'gap-24',
                         isLive && 'gap-24 sm:gap-14',
                     )}
                 >
