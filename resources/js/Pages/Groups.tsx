@@ -13,6 +13,7 @@ import {
 import { Head } from '@inertiajs/react';
 import useSize from '@react-hook/size';
 import { useRef } from 'react';
+import Hosting from '@/Components/Hosting';
 
 interface GroupsPageProps {
     matches: MatchType[];
@@ -159,6 +160,8 @@ export default function GroupsPage({
                     </div>
                 </div>
             </div>
+
+            <Hosting />
         </AuthenticatedLayout>
     );
 }

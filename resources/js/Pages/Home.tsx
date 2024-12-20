@@ -5,6 +5,7 @@ import { PageProps } from '@/types';
 import { Head } from '@inertiajs/react';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import Hosting from '@/Components/Hosting';
 
 export default function Home({ auth, games }: PageProps<{ games: Game[] }>) {
     const [liveGames, setLiveGames] = useState<Game[]>([]);
@@ -149,6 +150,8 @@ export default function Home({ auth, games }: PageProps<{ games: Game[] }>) {
                     </>
                 )}
             </div>
+
+            <Hosting />
         </AuthenticatedLayout>
     );
 }

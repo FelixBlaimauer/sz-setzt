@@ -1,4 +1,5 @@
 import GameCard, { Game } from '@/Components/GameCard';
+import Hosting from '@/Components/Hosting';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -294,6 +295,8 @@ export default function Details({
                     )}
                 </div>
             )}
+
+            {!auth.user && <Hosting />}
         </AuthenticatedLayout>
     );
 }
